@@ -1,8 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Route, Routes } from 'react-router-dom';
+import Signup from './Pages/Signup/Signup';
+import LoginPage from './Pages/Login/LoginPage';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    toast.success('User logged out successfully');
+  };
   return (
-    <div>App</div>
+    <div>
+       <Toaster position="top-center" reverseOrder={false} />
+       <Routes>
+       <Route path="/" element={<Signup />} />
+       <Route path="/signin" element={<LoginPage handleLogin={handleLogin} />} />
+       <Route path="/signup" element={<Signup />} />
+       </Routes>
+    </div>
   )
 }
 
