@@ -1,0 +1,202 @@
+.qandaContainer {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.questionItem {
+  display: flex;
+  align-items: flex-start; /* Align to the top for the delete button */
+  margin-right: 10px;
+  position: relative;
+}
+
+.questionNumber {
+  background-color: #eee;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.questionNumber.selected {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.removeButton {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.addButton {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: auto;
+}
+
+.questionContent {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.questionInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.optionTypes {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.optionTypes label {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.optionContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.optionContainer input[type="text"] {
+  flex-grow: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.dualInput {
+  width: 48%;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.correctRadio {
+  margin-right: 10px; /* Move radio to the left side */
+  cursor: pointer;
+}
+
+.removeOptionButton {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.addOptionButton {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.addOptionButton:hover {
+  background-color: #e0e0e0;
+}
+
+.timerSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto;
+  margin-bottom: 20px;
+}
+
+.timerSection label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.timerOptions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.timerButton {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.timerButton.selectedTimer {
+  background-color: #ff4d4d; /* Default red color */
+  color: white;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.footer button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.footer button:hover {
+  opacity: 0.9;
+}
+
+.createQuizButton {
+  background-color: #4CAF50;
+  color: white;
+}

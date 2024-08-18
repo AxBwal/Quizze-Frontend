@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Signup from './Pages/Signup/Signup';
 import LoginPage from './Pages/Login/LoginPage';
-import { Toaster } from 'react-hot-toast';
+import Dashboard from './Pages/Dashboard/Dashboard';  // Updated path
+import { Toaster, toast } from 'react-hot-toast';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,16 +25,18 @@ function App() {
     localStorage.removeItem('user');
     toast.success('User logged out successfully');
   };
+
   return (
     <div>
-       <Toaster position="top-center" reverseOrder={false} />
-       <Routes>
-       <Route path="/" element={<Signup />} />
-       <Route path="/signin" element={<LoginPage handleLogin={handleLogin} />} />
-       <Route path="/signup" element={<Signup />} />
-       </Routes>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Routes>
+        <Route path="/" element={<Signup />} />
+        <Route path="/signin" element={<LoginPage handleLogin={handleLogin} />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard/:userId" element={<Dashboard handleLogout={handleLogout} />} />
+      </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
