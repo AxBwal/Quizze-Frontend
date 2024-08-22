@@ -1,27 +1,34 @@
 import React, { useState } from 'react';
 import styles from './CreateQuizPopup.module.css';
+import Poll from '../../Components/Poll/Poll';
 import QandA from '../../Components/QandA/QandA';
+import toast from 'react-hot-toast';
 
 function CreateQuizPopup({ onClose }) {
-  const [quizType, setQuizType] = useState('Q&A'); // Default selected type
-  const [isCreatingQuiz, setIsCreatingQuiz] = useState(false); // Manage the state to show QandA component
+  const [quizType, setQuizType] = useState('Q&A');
+  const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
+  const [quizName, setQuizName] = useState('');
 
   const handleTypeChange = (type) => {
     setQuizType(type);
   };
 
   const handleContinue = () => {
-    if (quizType === 'Q&A') {
-      setIsCreatingQuiz(true); // If Q&A is selected, show the QandA component
+    if (quizName.trim() === '') {
+      toast.error('Quiz name is required');
+      return;
+    }
+
+    if (quizType === 'Poll Type' || quizType === 'Q&A') {
+      setIsCreatingQuiz(true);
     } else {
-      // Handle other quiz types if needed
       alert('Other quiz types are not yet implemented.');
     }
   };
 
   const handleQuizClose = () => {
-    setIsCreatingQuiz(false); // Reset to go back to the quiz type selection
-    onClose(); // Close the popup entirely if desired
+    setIsCreatingQuiz(false);
+    onClose();
   };
 
   return (
@@ -29,7 +36,12 @@ function CreateQuizPopup({ onClose }) {
       {!isCreatingQuiz ? (
         <div className={styles.popupContent}>
           <div className={styles.formGroup}>
-            <input type="text" placeholder="Quiz Name" />
+            <input 
+              type="text" 
+              placeholder="Quiz Name" 
+              value={quizName} 
+              onChange={(e) => setQuizName(e.target.value)} 
+            />
           </div>
           <div className={styles.formGroup}>
             <label>Quiz Type</label>
@@ -54,7 +66,11 @@ function CreateQuizPopup({ onClose }) {
           </div>
         </div>
       ) : (
-        <QandA onClose={handleQuizClose} />
+        quizType === 'Poll Type' ? (
+          <Poll onClose={handleQuizClose} />
+        ) : (
+          <QandA onClose={handleQuizClose} />
+        )
       )}
     </div>
   );

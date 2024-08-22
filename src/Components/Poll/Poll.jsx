@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import styles from './QandA.module.css';
+import styles from './Poll.module.css';
 
-function QandA({ onClose }) {
+function Poll({ onClose }) {
   const [questions, setQuestions] = useState([
     {
       id: 1,
       text: '',
       options: [
-        { type: 'Text', value: { text: '' }, isCorrect: false },
-        { type: 'Text', value: { text: '' }, isCorrect: false }
+        { type: 'Text', value: { text: '' } },
+        { type: 'Text', value: { text: '' } }
       ],
-      timer: 'OFF'
     }
   ]);
   const [selectedQuestion, setSelectedQuestion] = useState(1);
@@ -25,10 +24,9 @@ function QandA({ onClose }) {
           id: questions.length + 1,
           text: '',
           options: [
-            { type: 'Text', value: { text: '' }, isCorrect: false },
-            { type: 'Text', value: { text: '' }, isCorrect: false }
+            { type: 'Text', value: { text: '' } },
+            { type: 'Text', value: { text: '' } }
           ],
-          timer: 'OFF'
         }
       ]);
       setSelectedQuestion(questions.length + 1);
@@ -53,7 +51,7 @@ function QandA({ onClose }) {
             ...question,
             options: [
               ...question.options,
-              { type: optionType, value: { text: '', image: '' }, isCorrect: false }
+              { type: optionType, value: { text: '', image: '' } }
             ]
           }
         : question
@@ -93,30 +91,22 @@ function QandA({ onClose }) {
     setQuestions(updatedQuestions);
   };
 
-  const handleCorrectAnswerChange = (questionId, optionIndex) => {
-    const updatedQuestions = questions.map((question) =>
-      question.id === questionId
-        ? {
-            ...question,
-            options: question.options.map((option, index) => ({
-              ...option,
-              isCorrect: index === optionIndex
-            }))
-          }
-        : question
+  const handleCreateQuiz = () => {
+    const allFilled = questions.every((question) =>
+      question.text.trim() !== '' && question.options.every((option) => option.value.text.trim() !== '')
     );
-    setQuestions(updatedQuestions);
-  };
 
-  const handleTimerChange = (questionId, timerValue) => {
-    const updatedQuestions = questions.map((question) =>
-      question.id === questionId ? { ...question, timer: timerValue } : question
-    );
-    setQuestions(updatedQuestions);
+    if (!allFilled) {
+      alert('All fields are mandatory.');
+      return;
+    }
+
+    alert('Quiz created successfully!');
+    onClose();
   };
 
   return (
-    <div className={styles.qandaContainer}>
+    <div className={styles.pollContainer}>
       <div className={styles.header}>
         {questions.map((question) => (
           <div key={question.id} className={styles.questionItem}>
@@ -194,13 +184,6 @@ function QandA({ onClose }) {
 
                 {question.options.map((option, index) => (
                   <div key={index} className={styles.optionContainer}>
-                    <input
-                      type="radio"
-                      name={`correctOption-${question.id}`}
-                      checked={option.isCorrect}
-                      onChange={() => handleCorrectAnswerChange(question.id, index)}
-                      className={styles.correctRadio}
-                    />
                     {option.type === 'TextImage' ? (
                       <>
                         <input
@@ -244,40 +227,19 @@ function QandA({ onClose }) {
                     Add Option
                   </button>
                 )}
-
-                <div className={styles.timerSection}>
-                  <label>Timer</label>
-                  <div className={styles.timerOptions}>
-                    <button
-                      className={`${styles.timerButton} ${question.timer === 'OFF' ? styles.selectedTimer : ''}`}
-                      onClick={() => handleTimerChange(question.id, 'OFF')}
-                    >
-                      OFF
-                    </button>
-                    <button
-                      className={`${styles.timerButton} ${question.timer === '5s' ? styles.selectedTimer : ''}`}
-                      onClick={() => handleTimerChange(question.id, '5s')}
-                    >
-                      5 sec
-                    </button>
-                    <button
-                      className={`${styles.timerButton} ${question.timer === '10s' ? styles.selectedTimer : ''}`}
-                      onClick={() => handleTimerChange(question.id, '10s')}
-                    >
-                      10 sec
-                    </button>
-                  </div>
-                </div>
               </div>
             )
         )}
       </div>
+
       <div className={styles.footer}>
         <button onClick={onClose}>Cancel</button>
-        <button className={styles.createQuizButton}>Create Quiz</button>
+        <button className={styles.createQuizButton} onClick={handleCreateQuiz}>
+          Create Quiz
+        </button>
       </div>
     </div>
   );
 }
 
-export default QandA;
+export default Poll;

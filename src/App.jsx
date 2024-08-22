@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Signup from './Pages/Signup/Signup';
 import LoginPage from './Pages/Login/LoginPage';
-import Dashboard from './Pages/Dashboard/Dashboard';  // Updated path
+import Dashboard from './Pages/DashBoard/Dashboard';  
 import { Toaster, toast } from 'react-hot-toast';
 
 function App() {

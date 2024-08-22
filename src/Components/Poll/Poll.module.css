@@ -1,4 +1,4 @@
-.qandaContainer {
+.pollContainer {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -8,14 +8,12 @@
   display: flex;
   flex-direction: column;
 }
-
 .header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
   justify-content: space-between;
 }
-
 .questionItem {
   display: flex;
   align-items: center;
@@ -34,12 +32,10 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .questionNumber.selected {
   background-color: #4CAF50;
   color: white;
 }
-
 .addButton {
   background-color: #4CAF50;
   border: none;
@@ -54,7 +50,6 @@
   font-size: 20px;
   margin-left: 10px;
 }
-
 .maxQuestionsText {
   margin-left: auto;
   font-size: 14px;
@@ -66,16 +61,14 @@
   flex-direction: column;
   margin-bottom: 20px;
 }
-
 .questionInput {
   width: 100%;
-  padding: 12px; 
+  padding: 12px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 6px; 
+  border-radius: 6px;
   font-size: 16px;
 }
-
 .optionTypes {
   display: flex;
   align-items: center;
@@ -93,21 +86,15 @@
   margin-bottom: 10px;
   position: relative;
 }
-
-.correctRadio {
-  margin-right: 10px; 
-  cursor: pointer;
-}
-
 .optionInput,
 .dualInput {
   flex-grow: 1;
-  padding: 10px; 
+  padding: 10px;
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  min-width: 200px; 
+  min-width: 200px;
 }
 
 .removeOptionButton {
@@ -117,13 +104,13 @@
   font-size: 16px;
   cursor: pointer;
   position: absolute;
-  right: -25px; 
+  right: -25px;
 }
 
 .addOptionButton {
   background-color: #f0f0f0;
   border: none;
-  padding: 12px 20px; 
+  padding: 12px 20px;
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 20px;
@@ -134,34 +121,6 @@
   background-color: #e0e0e0;
 }
 
-.timerSection {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-left: auto;
-  margin-bottom: 20px;
-}
-
-.timerOptions {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.timerButton {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 12px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.timerButton.selectedTimer {
-  background-color: #ff4d4d; 
-  color: white;
-}
-
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -169,7 +128,7 @@
 }
 
 .footer button {
-  padding: 12px 20px; 
+  padding: 12px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -184,4 +143,8 @@
 .createQuizButton {
   background-color: #4CAF50;
   color: white;
+}
+
+.createQuizButton:hover {
+  background-color: #45a049;
 }
