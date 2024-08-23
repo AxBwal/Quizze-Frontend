@@ -7,15 +7,25 @@ function QandA({ onClose }) {
     {
       id: 1,
       text: '',
-      options: [
-        { type: 'Text', value: { text: '' }, isCorrect: false },
-        { type: 'Text', value: { text: '' }, isCorrect: false }
-      ],
-      timer: 'OFF'
-    }
+      options: {
+        Text: [
+          { value: '', isCorrect: false },
+          { value: '', isCorrect: false }
+        ],
+        Image: [
+          { value: '', isCorrect: false },
+          { value: '', isCorrect: false }
+        ],
+        TextImage: [
+          { text: '', image: '', isCorrect: false },
+          { text: '', image: '', isCorrect: false }
+        ]
+      },
+      selectedType: 'Text',
+      timer: 'OFF',
+    },
   ]);
   const [selectedQuestion, setSelectedQuestion] = useState(1);
-  const [optionType, setOptionType] = useState('Text');
 
   const addQuestion = () => {
     if (questions.length < 5) {
@@ -24,15 +34,25 @@ function QandA({ onClose }) {
         {
           id: questions.length + 1,
           text: '',
-          options: [
-            { type: 'Text', value: { text: '' }, isCorrect: false },
-            { type: 'Text', value: { text: '' }, isCorrect: false }
-          ],
-          timer: 'OFF'
-        }
+          options: {
+            Text: [
+              { value: '', isCorrect: false },
+              { value: '', isCorrect: false }
+            ],
+            Image: [
+              { value: '', isCorrect: false },
+              { value: '', isCorrect: false }
+            ],
+            TextImage: [
+              { text: '', image: '', isCorrect: false },
+              { text: '', image: '', isCorrect: false }
+            ]
+          },
+          selectedType: 'Text',
+          timer: 'OFF',
+        },
       ]);
       setSelectedQuestion(questions.length + 1);
-      setOptionType('Text');
     } else {
       alert('Maximum question limit reached');
     }
@@ -51,10 +71,15 @@ function QandA({ onClose }) {
       question.id === questionId
         ? {
             ...question,
-            options: [
+            options: {
               ...question.options,
-              { type: optionType, value: { text: '', image: '' }, isCorrect: false }
-            ]
+              [question.selectedType]: [
+                ...question.options[question.selectedType],
+                question.selectedType === 'TextImage'
+                  ? { text: '', image: '', isCorrect: false }
+                  : { value: '', isCorrect: false },
+              ],
+            },
           }
         : question
     );
@@ -66,7 +91,12 @@ function QandA({ onClose }) {
       question.id === questionId
         ? {
             ...question,
-            options: question.options.filter((_, index) => index !== optionIndex)
+            options: {
+              ...question.options,
+              [question.selectedType]: question.options[question.selectedType].filter(
+                (_, index) => index !== optionIndex
+              ),
+            },
           }
         : question
     );
@@ -74,19 +104,25 @@ function QandA({ onClose }) {
   };
 
   const handleOptionTypeChange = (questionId, type) => {
-    setOptionType(type);
+    const updatedQuestions = questions.map((question) =>
+      question.id === questionId ? { ...question, selectedType: type } : question
+    );
+    setQuestions(updatedQuestions);
   };
 
-  const handleOptionValueChange = (questionId, optionIndex, value, key) => {
+  const handleOptionValueChange = (questionId, optionIndex, value, key = 'value') => {
     const updatedQuestions = questions.map((question) =>
       question.id === questionId
         ? {
             ...question,
-            options: question.options.map((option, index) =>
-              index === optionIndex
-                ? { ...option, value: { ...option.value, [key]: value } }
-                : option
-            )
+            options: {
+              ...question.options,
+              [question.selectedType]: question.options[question.selectedType].map((option, index) =>
+                index === optionIndex
+                  ? { ...option, [key]: value }
+                  : option
+              ),
+            },
           }
         : question
     );
@@ -98,10 +134,13 @@ function QandA({ onClose }) {
       question.id === questionId
         ? {
             ...question,
-            options: question.options.map((option, index) => ({
-              ...option,
-              isCorrect: index === optionIndex
-            }))
+            options: {
+              ...question.options,
+              [question.selectedType]: question.options[question.selectedType].map((option, index) => ({
+                ...option,
+                isCorrect: index === optionIndex,
+              })),
+            },
           }
         : question
     );
@@ -168,7 +207,7 @@ function QandA({ onClose }) {
                       type="radio"
                       name={`optionType-${question.id}`}
                       onChange={() => handleOptionTypeChange(question.id, 'Text')}
-                      checked={optionType === 'Text'}
+                      checked={question.selectedType === 'Text'}
                     />
                     Text
                   </label>
@@ -177,7 +216,7 @@ function QandA({ onClose }) {
                       type="radio"
                       name={`optionType-${question.id}`}
                       onChange={() => handleOptionTypeChange(question.id, 'Image')}
-                      checked={optionType === 'Image'}
+                      checked={question.selectedType === 'Image'}
                     />
                     Image URL
                   </label>
@@ -186,14 +225,19 @@ function QandA({ onClose }) {
                       type="radio"
                       name={`optionType-${question.id}`}
                       onChange={() => handleOptionTypeChange(question.id, 'TextImage')}
-                      checked={optionType === 'TextImage'}
+                      checked={question.selectedType === 'TextImage'}
                     />
                     Text & Image URL
                   </label>
                 </div>
 
-                {question.options.map((option, index) => (
-                  <div key={index} className={styles.optionContainer}>
+                {question.options[question.selectedType].map((option, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.optionContainer} ${
+                      option.isCorrect ? styles.correctOption : ''
+                    }`}
+                  >
                     <input
                       type="radio"
                       name={`correctOption-${question.id}`}
@@ -201,12 +245,12 @@ function QandA({ onClose }) {
                       onChange={() => handleCorrectAnswerChange(question.id, index)}
                       className={styles.correctRadio}
                     />
-                    {option.type === 'TextImage' ? (
+                    {question.selectedType === 'TextImage' ? (
                       <>
                         <input
                           type="text"
                           placeholder="Text"
-                          value={option.value.text || ''}
+                          value={option.text}
                           className={styles.dualInput}
                           onChange={(e) =>
                             handleOptionValueChange(question.id, index, e.target.value, 'text')
@@ -215,7 +259,7 @@ function QandA({ onClose }) {
                         <input
                           type="text"
                           placeholder="Image URL"
-                          value={option.value.image || ''}
+                          value={option.image}
                           className={styles.dualInput}
                           onChange={(e) =>
                             handleOptionValueChange(question.id, index, e.target.value, 'image')
@@ -225,22 +269,34 @@ function QandA({ onClose }) {
                     ) : (
                       <input
                         type="text"
-                        placeholder={option.type === 'Text' ? 'Text' : 'Image URL'}
-                        value={option.type === 'Text' ? option.value.text : option.value.image}
-                        onChange={(e) => handleOptionValueChange(question.id, index, e.target.value, option.type === 'Text' ? 'text' : 'image')}
+                        placeholder={question.selectedType === 'Text' ? 'Text' : 'Image URL'}
+                        value={option.value}
+                        onChange={(e) =>
+                          handleOptionValueChange(
+                            question.id,
+                            index,
+                            e.target.value
+                          )
+                        }
                         className={styles.optionInput}
                       />
                     )}
                     {index >= 2 && (
-                      <button className={styles.removeOptionButton} onClick={() => removeOption(question.id, index)}>
+                      <button
+                        className={styles.removeOptionButton}
+                        onClick={() => removeOption(question.id, index)}
+                      >
                         <FaTimes />
                       </button>
                     )}
                   </div>
                 ))}
 
-                {question.options.length < 4 && (
-                  <button className={styles.addOptionButton} onClick={() => addOption(question.id)}>
+                {question.options[question.selectedType].length < 4 && (
+                  <button
+                    className={styles.addOptionButton}
+                    onClick={() => addOption(question.id)}
+                  >
                     Add Option
                   </button>
                 )}
@@ -249,19 +305,25 @@ function QandA({ onClose }) {
                   <label>Timer</label>
                   <div className={styles.timerOptions}>
                     <button
-                      className={`${styles.timerButton} ${question.timer === 'OFF' ? styles.selectedTimer : ''}`}
+                      className={`${styles.timerButton} ${
+                        question.timer === 'OFF' ? styles.selectedTimer : ''
+                      }`}
                       onClick={() => handleTimerChange(question.id, 'OFF')}
                     >
                       OFF
                     </button>
                     <button
-                      className={`${styles.timerButton} ${question.timer === '5s' ? styles.selectedTimer : ''}`}
+                      className={`${styles.timerButton} ${
+                        question.timer === '5s' ? styles.selectedTimer : ''
+                      }`}
                       onClick={() => handleTimerChange(question.id, '5s')}
                     >
                       5 sec
                     </button>
                     <button
-                      className={`${styles.timerButton} ${question.timer === '10s' ? styles.selectedTimer : ''}`}
+                      className={`${styles.timerButton} ${
+                        question.timer === '10s' ? styles.selectedTimer : ''
+                      }`}
                       onClick={() => handleTimerChange(question.id, '10s')}
                     >
                       10 sec
@@ -273,7 +335,7 @@ function QandA({ onClose }) {
         )}
       </div>
       <div className={styles.footer}>
-        <button onClick={onClose}>Cancel</button>
+        <button className={styles.cancelButton} onClick={onClose}>Cancel</button>
         <button className={styles.createQuizButton}>Create Quiz</button>
       </div>
     </div>
