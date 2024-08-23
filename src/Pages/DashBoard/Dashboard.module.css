@@ -16,8 +16,9 @@
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 70px;
+  font-weight: 400;
+  font-family: "Jomhuria", serif;
   margin-bottom: 40px;
   text-align: center;
 }
@@ -34,6 +35,14 @@
   cursor: pointer;
   font-size: 16px;
   color: #333;
+  background-color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.navList li:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 255, 0.2); /* Box shadow only on hover */
 }
 
 .logoutSection {
@@ -47,7 +56,7 @@
 }
 
 .logoutButton {
-  background: none;
+  background-color: #ffffff;
   border: none;
   color: #333;
   cursor: pointer;
@@ -55,7 +64,13 @@
   display: block;
   width: 100%;
   text-align: center;
-  padding-bottom: 10px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.logoutButton:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 255, 0.2); /* Box shadow only on hover */
 }
 
 .mainContent {
@@ -68,10 +83,11 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 40px;
+  gap: 20px; /* Horizontal spacing between cards */
 }
 
 .card {
-  width: 30%;
+  flex: 1;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -80,17 +96,34 @@
 }
 
 .cardCount {
-  font-size: 36px;
+  font-size: 40px; /* Increase the size of the "0" */
   font-weight: bold;
 }
 
 .cardLabel {
-  margin-top: 10px;
+  margin-top: 15px; /* Add some space between the "0" and the label */
   font-size: 18px;
+  color: inherit; /* Make sure the label color inherits from cardCount */
+}
+
+.card:nth-child(1) .cardLabel,
+.card:nth-child(1) .cardCount {
+  color: #ff5722; /* Color for the first card */
+}
+
+.card:nth-child(2) .cardLabel,
+.card:nth-child(2) .cardCount {
+  color: #4caf50; /* Color for the second card */
+}
+
+.card:nth-child(3) .cardLabel,
+.card:nth-child(3) .cardCount {
+  color: #2196f3; /* Color for the third card */
 }
 
 .trendingHeading {
   font-size: 22px;
   font-weight: bold;
   color: #000;
+  margin-top: 40px;
 }
