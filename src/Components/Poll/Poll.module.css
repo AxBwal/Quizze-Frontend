@@ -148,3 +148,7 @@
 .createQuizButton:hover {
   background-color: #45a049;
 }
+.correctOption input {
+  border-color: #4caf50;
+  background-color: #e8f5e9;
+}
