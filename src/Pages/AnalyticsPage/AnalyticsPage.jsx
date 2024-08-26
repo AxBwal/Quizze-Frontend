@@ -41,7 +41,7 @@ function AnalyticsPage() {
     console.log('Attempting to fetch quiz with ID:', quizId); // Log the quizId being used
   
     try {
-      const response = await axios.get(`http://localhost:3000/quiz/${quizId}`, {
+      const response = await axios.get(`http://localhost:3000/quiz/id/${quizId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -53,16 +53,19 @@ function AnalyticsPage() {
         const shareableLink = `${window.location.origin}/sharedquiz/${response.data.uniqueId}`;
         console.log('Generated shareable link:', shareableLink); // Log the generated shareable link
   
+        // Use navigator.clipboard API to copy the link
         await navigator.clipboard.writeText(shareableLink);
-        toast.success(`Link copied to clipboard: ${shareableLink}`);
+        toast.success('Link copied to clipboard');
       } else {
-        throw new Error('Unique ID not found in the quiz data');
+        console.error('Unique ID not found in the quiz data');
+        toast.error('Failed to generate share link');
       }
     } catch (error) {
       console.error('Failed to fetch the share link:', error.message); // Log the error message
       toast.error('Failed to fetch the share link');
     }
   };
+  
   
   
   
