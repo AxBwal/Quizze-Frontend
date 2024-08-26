@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { createPoll } from '../../api/createPoll'; // Adjust the import path as needed
-import PublishSuccess from '../PublishSuccess/PublishSuccess'; // Import the new component
+import { createPoll } from '../../api/createPoll';
+import PollShareModal from '../PollShareModal/PollShareModal';
 import styles from './Poll.module.css';
 
 function Poll({ onClose }) {
@@ -12,16 +11,16 @@ function Poll({ onClose }) {
       text: '',
       options: {
         Text: [
-          { value: '', isCorrect: false },
-          { value: '', isCorrect: false },
+          { value: '' },
+          { value: '' },
         ],
         Image: [
-          { value: '', isCorrect: false },
-          { value: '', isCorrect: false },
+          { value: '' },
+          { value: '' },
         ],
         TextImage: [
-          { text: '', image: '', isCorrect: false },
-          { text: '', image: '', isCorrect: false },
+          { text: '', image: '' },
+          { text: '', image: '' },
         ],
       },
       selectedType: 'Text',
@@ -35,16 +34,16 @@ function Poll({ onClose }) {
     if (questions.length < 5) {
       const initialOptions = {
         Text: [
-          { value: '', isCorrect: false },
-          { value: '', isCorrect: false },
+          { value: '' },
+          { value: '' },
         ],
         Image: [
-          { value: '', isCorrect: false },
-          { value: '', isCorrect: false },
+          { value: '' },
+          { value: '' },
         ],
         TextImage: [
-          { text: '', image: '', isCorrect: false },
-          { text: '', image: '', isCorrect: false },
+          { text: '', image: '' },
+          { text: '', image: '' },
         ],
       };
 
@@ -81,8 +80,8 @@ function Poll({ onClose }) {
               [question.selectedType]: [
                 ...question.options[question.selectedType],
                 question.selectedType === 'TextImage'
-                  ? { text: '', image: '', isCorrect: false }
-                  : { value: '', isCorrect: false },
+                  ? { text: '', image: '' }
+                  : { value: '' },
               ],
             },
           }
@@ -134,24 +133,6 @@ function Poll({ onClose }) {
     setQuestions(updatedQuestions);
   };
 
-  const handleCorrectAnswerChange = (questionId, optionIndex) => {
-    const updatedQuestions = questions.map((question) =>
-      question.id === questionId
-        ? {
-            ...question,
-            options: {
-              ...question.options,
-              [question.selectedType]: question.options[question.selectedType].map((option, index) => ({
-                ...option,
-                isCorrect: index === optionIndex,
-              })),
-            },
-          }
-        : question
-    );
-    setQuestions(updatedQuestions);
-  };
-
   const handleCreatePoll = async () => {
     try {
       const userId = localStorage.getItem('user');
@@ -174,7 +155,7 @@ function Poll({ onClose }) {
       const response = await createPoll(pollData);
 
       if (response && response.uniqueUrl) {
-        const uniqueUrl = response.uniqueUrl;
+        const uniqueUrl = `${window.location.origin}/poll/${response.uniqueUrl}`;
         setUniqueUrl(uniqueUrl);
         setShowPublishSuccess(true);
       } else {
@@ -188,9 +169,10 @@ function Poll({ onClose }) {
   return (
     <div>
       {showPublishSuccess ? (
-        <PublishSuccess uniqueUrl={uniqueUrl} onClose={onClose} />
+        <PollShareModal uniqueUrl={uniqueUrl} onClose={onClose} />
       ) : (
         <div className={styles.pollContainer}>
+          {/* Poll creation UI */}
           <div className={styles.header}>
             {questions.map((question) => (
               <div key={question.id} className={styles.questionItem}>
@@ -267,19 +249,7 @@ function Poll({ onClose }) {
                     </div>
 
                     {question.options[question.selectedType].map((option, index) => (
-                      <div
-                        key={index}
-                        className={`${styles.optionContainer} ${
-                          option.isCorrect ? styles.correctOption : ''
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name={`correctOption-${question.id}`}
-                          checked={option.isCorrect}
-                          onChange={() => handleCorrectAnswerChange(question.id, index)}
-                          className={styles.correctRadio}
-                        />
+                      <div key={index} className={styles.optionContainer}>
                         {question.selectedType === 'TextImage' ? (
                           <>
                             <input
@@ -307,11 +277,7 @@ function Poll({ onClose }) {
                             placeholder={question.selectedType === 'Text' ? 'Text' : 'Image URL'}
                             value={option.value}
                             onChange={(e) =>
-                              handleOptionValueChange(
-                                question.id,
-                                index,
-                                e.target.value
-                              )
+                              handleOptionValueChange(question.id, index, e.target.value)
                             }
                             className={styles.optionInput}
                           />
@@ -339,9 +305,14 @@ function Poll({ onClose }) {
                 )
             )}
           </div>
+
           <div className={styles.footer}>
-            <button className={styles.cancelButton} onClick={onClose}>Cancel</button>
-            <button className={styles.createQuizButton} onClick={handleCreatePoll}>Create Poll</button>
+            <button className={styles.cancelButton} onClick={onClose}>
+              Cancel
+            </button>
+            <button className={styles.createQuizButton} onClick={handleCreatePoll}>
+              Create Poll
+            </button>
           </div>
         </div>
       )}

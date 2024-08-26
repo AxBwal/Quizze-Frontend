@@ -1,11 +1,13 @@
+// App.js
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Signup from './Pages/Signup/Signup';
 import LoginPage from './Pages/Login/LoginPage';
-import Dashboard from './Pages/DashBoard/Dashboard';  
+import Dashboard from './Pages/DashBoard/Dashboard';
 import { Toaster, toast } from 'react-hot-toast';
 import SharedQuiz from './Components/SharedQuiz/SharedQuiz';
 import QandA from './Components/QandA/QandA';
+import SharedPoll from './Components/SharedPoll/SharedPoll';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,6 +39,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard/:userId" element={<Dashboard handleLogout={handleLogout} />} />
         <Route path="/sharedquiz/:uniqueUrl" element={<SharedQuiz />} />
+        <Route path="/poll/:uniqueUrl" element={<SharedPoll />} /> {/* Corrected this line */}
         <Route path="/createquiz" element={<QandA />} />
       </Routes>
     </div>
