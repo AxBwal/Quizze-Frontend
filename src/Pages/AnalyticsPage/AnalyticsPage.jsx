@@ -46,20 +46,24 @@ function AnalyticsPage() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      
+  
       console.log('Response from backend:', response.data); // Log the response from the backend
   
-      const shareableLink = `${window.location.origin}/sharedquiz/${response.data.uniqueId}`;
-      
-      console.log('Generated shareable link:', shareableLink); // Log the generated shareable link
-      
-      navigator.clipboard.writeText(shareableLink);
-      toast.success(`Link copied to clipboard: ${shareableLink}`);
+      if (response.data && response.data.uniqueId) {
+        const shareableLink = `${window.location.origin}/sharedquiz/${response.data.uniqueId}`;
+        console.log('Generated shareable link:', shareableLink); // Log the generated shareable link
+  
+        await navigator.clipboard.writeText(shareableLink);
+        toast.success(`Link copied to clipboard: ${shareableLink}`);
+      } else {
+        throw new Error('Unique ID not found in the quiz data');
+      }
     } catch (error) {
       console.error('Failed to fetch the share link:', error.message); // Log the error message
       toast.error('Failed to fetch the share link');
     }
   };
+  
   
   
   
@@ -71,23 +75,36 @@ function AnalyticsPage() {
   };
 
   const confirmDeleteQuiz = async () => {
+    if (!quizToDelete) {
+      toast.error('No quiz selected for deletion');
+      return;
+    }
+  
     try {
-      console.log('Deleting quiz with ID:', quizToDelete);
-      await axios.delete(`http://localhost:3000/quiz/${quizToDelete}`, {
+      console.log('Attempting to delete quiz with ID:', quizToDelete); // Log the quizId being deleted
+      const response = await axios.delete(`http://localhost:3000/quiz/delete/${quizToDelete}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      setQuizzes(quizzes.filter((quiz) => quiz._id !== quizToDelete));
-      toast.success('Quiz deleted successfully');
+  
+      console.log('Delete response:', response.data); // Log the response from the delete request
+  
+      if (response.status === 200) {
+        setQuizzes(quizzes.filter((quiz) => quiz._id !== quizToDelete));
+        toast.success('Quiz deleted successfully');
+      } else {
+        toast.error('Failed to delete the quiz');
+      }
     } catch (error) {
+      console.error('Error deleting quiz:', error.message); // Log the error message
       toast.error('Failed to delete the quiz');
-      console.error('Error:', error.message);
     } finally {
       setShowDeletePopup(false);
       setQuizToDelete(null);
     }
   };
+  
   
   
 
