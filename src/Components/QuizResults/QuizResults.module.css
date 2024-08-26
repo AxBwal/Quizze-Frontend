@@ -1,0 +1,23 @@
+.resultsContainer {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .trophyContainer {
+    margin: 20px 0;
+  }
+  
+  .trophy {
+    width: 150px;
+  }
+  
+  .scoreText {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  
+  .score {
+    color: #28a745; /* Green color for the score */
+    font-weight: bold;
+  }
+  

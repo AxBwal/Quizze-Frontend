@@ -4,6 +4,8 @@ import Signup from './Pages/Signup/Signup';
 import LoginPage from './Pages/Login/LoginPage';
 import Dashboard from './Pages/DashBoard/Dashboard';  
 import { Toaster, toast } from 'react-hot-toast';
+import SharedQuiz from './Components/SharedQuiz/SharedQuiz';
+import QandA from './Components/QandA/QandA';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +36,8 @@ function App() {
         <Route path="/signin" element={<LoginPage handleLogin={handleLogin} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard/:userId" element={<Dashboard handleLogout={handleLogout} />} />
+        <Route path="/sharedquiz/:uniqueUrl" element={<SharedQuiz />} />
+        <Route path="/createquiz" element={<QandA />} />
       </Routes>
     </div>
   );
