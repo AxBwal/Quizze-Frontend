@@ -11,6 +11,10 @@ function Dashboard({ handleLogout }) {
     handleLogout();
     navigate('/signin');
   };
+  const goToAnalytics = () => {
+    const userId = localStorage.getItem('user'); // Assuming user ID is stored in localStorage
+    navigate(`/analytics/${userId}`);
+  };
 
   const openPopup = () => {
     setShowPopup(true);
@@ -26,7 +30,7 @@ function Dashboard({ handleLogout }) {
         <div className={styles.logo}>QUIZZIE</div>
         <ul className={styles.navList}>
           <li>Dashboard</li>
-          <li>Analytics</li>
+          <li onClick={goToAnalytics}>Analytics</li>
           <li onClick={openPopup}>Create Quiz</li>
         </ul>
         <div className={styles.logoutSection}>

@@ -1,0 +1,69 @@
+/* AnalyticsPage.module.css */
+
+.analyticsContainer {
+    padding: 20px;
+  }
+  
+  .analyticsContainer h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .analyticsTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .analyticsTable th, .analyticsTable td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  .analyticsTable th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .analyticsTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .analyticsTable tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .analyticsTable td button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .analyticsTable td button:first-of-type {
+    background-color: #ffc107;
+    color: white;
+  }
+  
+  .analyticsTable td button:nth-of-type(2) {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .analyticsTable td button:last-of-type {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .analyticsTable td a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .analyticsTable td a:hover {
+    text-decoration: underline;
+  }
+  

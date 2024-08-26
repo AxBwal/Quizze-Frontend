@@ -8,6 +8,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import SharedQuiz from './Components/SharedQuiz/SharedQuiz';
 import QandA from './Components/QandA/QandA';
 import SharedPoll from './Components/SharedPoll/SharedPoll';
+import AnalyticsPage from './Pages/AnalyticsPage/AnalyticsPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,6 +42,7 @@ function App() {
         <Route path="/sharedquiz/:uniqueUrl" element={<SharedQuiz />} />
         <Route path="/poll/:uniqueUrl" element={<SharedPoll />} /> {/* Corrected this line */}
         <Route path="/createquiz" element={<QandA />} />
+        <Route path="/analytics/:userId" element={<AnalyticsPage />} />
       </Routes>
     </div>
   );
