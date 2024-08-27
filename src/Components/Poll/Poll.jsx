@@ -8,7 +8,7 @@ import styles from './Poll.module.css';
 
 function Poll({ onClose }) {
   const location = useLocation();
-  const pollData = location.state?.item;
+  const pollData = location.state?.item;  // Assuming you are passing pollData via state
 
   const [questions, setQuestions] = useState(() => {
     if (pollData) {
@@ -148,13 +148,13 @@ function Poll({ onClose }) {
         options: question.options[question.selectedType],
       }));
 
-      const pollData = {
+      const pollPayload = {
         userId,
         questions: formattedQuestions,
         uniqueId: pollData?.uniqueId, // Use existing uniqueId if editing
       };
 
-      const response = await createPoll(pollData);
+      const response = await createPoll(pollPayload);
 
       if (response && response.uniqueUrl) {
         setUniqueUrl(`${window.location.origin}/poll/${response.uniqueUrl}`);
