@@ -9,6 +9,7 @@ import QandA from './Components/QandA/QandA';
 import SharedPoll from './Components/SharedPoll/SharedPoll';
 import AnalyticsPage from './Pages/AnalyticsPage/AnalyticsPage';
 import Poll from './Components/Poll/Poll';
+import QuizQuestionAnalysisPage from './Components/QuizQuestionAnalysisPage/QuizQuestionAnalysisPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,6 +47,8 @@ function App() {
         {/* Adding routes for editing quizzes and polls */}
         <Route path="/quiz/edit/:quizId" element={<QandA />} />
         <Route path="/poll/edit/:pollId" element={<Poll />} />
+        <Route path="/analytics/:userId" element={<AnalyticsPage />} />
+        <Route path="/quiz/analysis/:quizId" element={<QuizQuestionAnalysisPage />} />
       </Routes>
     </div>
   );

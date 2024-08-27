@@ -95,13 +95,14 @@ function AnalyticsPage() {
   };
 
   const handleEditItem = (item) => {
-    console.log("Navigating with item:", item);
     navigate(`/quiz/edit/${item._id}`, {
       state: { item }, // Passing the quiz data via state
     });
   };
-  
-  
+
+  const handleQuestionWiseAnalysis = (item) => {
+    navigate(`/quiz/analysis/${item._id}`);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -113,44 +114,60 @@ function AnalyticsPage() {
 
   return (
     <div className={styles.analyticsContainer}>
-      <h2>Quiz Analysis</h2>
-      {items.length === 0 ? (
-        <p>No data to show.</p>
-      ) : (
-        <table className={styles.analyticsTable}>
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Name</th>
-              <th>Created On</th>
-              <th></th> {/* Empty header for actions */}
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, index) => (
-              <tr key={item._id}>
-                <td>{index + 1}</td>
-                <td>{`Quiz ${index + 1}`}</td>
-                <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                <td className={styles.actionsColumn}>
-                  <button onClick={() => handleEditItem(item)}>Question Wise Analysis</button>
-                  <button onClick={() => handleShareItem(item)}>Share</button>
-                  <button onClick={() => handleEditItem(item)}>Edit</button> {/* Connected to the edit handler */}
-                  <button onClick={() => handleDeleteItem(item._id, item.type)}>Delete</button>
-                </td>
+      <div className={styles.sidebar}>
+        <div className={styles.logo}>QUIZZIE</div>
+        <ul className={styles.navList}>
+          <li onClick={() => navigate(`/dashboard/${userId}`)}>Dashboard</li>
+          <li className={styles.active}>Analytics</li>
+          <li onClick={() => navigate(`/quiz/create`)}>Create Quiz</li>
+        </ul>
+        <div className={styles.logoutSection}>
+          <hr className={styles.divider} />
+          <button onClick={() => navigate('/signin')} className={styles.logoutButton}>
+            LOGOUT
+          </button>
+        </div>
+      </div>
+      <div className={styles.mainContent}>
+        <h2>Quiz Analysis</h2>
+        {items.length === 0 ? (
+          <p>No data to show.</p>
+        ) : (
+          <table className={styles.analyticsTable}>
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Created On</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {items.map((item, index) => (
+                <tr key={item._id}>
+                  <td>{index + 1}</td>
+                  <td>{`Quiz ${index + 1}`}</td>
+                  <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                  <td className={styles.actionsColumn}>
+                    <button onClick={() => handleQuestionWiseAnalysis(item)}>Question Wise Analysis</button>
+                    <button onClick={() => handleShareItem(item)}>Share</button>
+                    <button onClick={() => handleEditItem(item)}>Edit</button>
+                    <button onClick={() => handleDeleteItem(item._id, item.type)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-      {showDeletePopup && (
-        <ConfirmationPopup
-          message="Are you sure you want to delete this item?"
-          onConfirm={confirmDeleteItem}
-          onCancel={() => setShowDeletePopup(false)}
-        />
-      )}
+        {showDeletePopup && (
+          <ConfirmationPopup
+            message="Are you sure you want to delete this item?"
+            onConfirm={confirmDeleteItem}
+            onCancel={() => setShowDeletePopup(false)}
+          />
+        )}
+      </div>
     </div>
   );
 }
