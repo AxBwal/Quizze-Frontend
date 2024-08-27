@@ -10,6 +10,7 @@ import SharedPoll from './Components/SharedPoll/SharedPoll';
 import AnalyticsPage from './Pages/AnalyticsPage/AnalyticsPage';
 import Poll from './Components/Poll/Poll';
 import QuizQuestionAnalysisPage from './Components/QuizQuestionAnalysisPage/QuizQuestionAnalysisPage';
+import PollQuestionAnalysisPage from './Components/QuizQuestionAnalysisPage/PollQuestionAnalysisPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,6 +50,7 @@ function App() {
         <Route path="/poll/edit/:pollId" element={<Poll />} />
         <Route path="/analytics/:userId" element={<AnalyticsPage />} />
         <Route path="/quiz/analysis/:quizId" element={<QuizQuestionAnalysisPage />} />
+        <Route path="/poll/analysis/:pollId" element={<PollQuestionAnalysisPage />} />
       </Routes>
     </div>
   );

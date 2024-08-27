@@ -106,8 +106,13 @@ function AnalyticsPage() {
   };
 
   const handleQuestionWiseAnalysis = (item) => {
-    navigate(`/quiz/analysis/${item._id}`);
+    if (item.type === "poll") {
+      navigate(`/poll/analysis/${item._id}`);
+    } else {
+      navigate(`/quiz/analysis/${item._id}`);
+    }
   };
+  
 
   const openCreateQuizPopup = () => {
     setShowCreateQuizPopup(true);

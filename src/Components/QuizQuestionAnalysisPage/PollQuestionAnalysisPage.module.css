@@ -1,0 +1,100 @@
+.analysisContainer {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #f0f0f0;
+    padding: 20px;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .navList {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .navList li {
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .navList li.active {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  .logoutSection {
+    margin-top: auto;
+  }
+  
+  .logoutButton {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #d60000;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .mainContent {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .title {
+    font-size: 28px;
+    color: #4A90E2;
+  }
+  
+  .dateInfo p {
+    margin: 0;
+    font-size: 14px;
+    color: #FF6B00;
+  }
+  
+  .questionCard {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .optionsContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .optionBox {
+    text-align: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    width: 80px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .optionBox h4 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .optionBox p {
+    margin: 0;
+    font-size: 12px;
+    color: #999;
+  }
+  
