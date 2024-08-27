@@ -27,18 +27,9 @@ function Poll({ onClose }) {
         id: 1,
         text: '',
         options: {
-          Text: [
-            { value: '' },
-            { value: '' },
-          ],
-          Image: [
-            { value: '' },
-            { value: '' },
-          ],
-          TextImage: [
-            { text: '', image: '' },
-            { text: '', image: '' },
-          ],
+          Text: [{ value: '' }, { value: '' }],
+          Image: [{ value: '' }, { value: '' }],
+          TextImage: [{ text: '', image: '' }, { text: '', image: '' }],
         },
         selectedType: 'Text',
       }];
@@ -52,18 +43,9 @@ function Poll({ onClose }) {
   const addQuestion = () => {
     if (questions.length < 5) {
       const initialOptions = {
-        Text: [
-          { value: '' },
-          { value: '' },
-        ],
-        Image: [
-          { value: '' },
-          { value: '' },
-        ],
-        TextImage: [
-          { text: '', image: '' },
-          { text: '', image: '' },
-        ],
+        Text: [{ value: '' }, { value: '' }],
+        Image: [{ value: '' }, { value: '' }],
+        TextImage: [{ text: '', image: '' }, { text: '', image: '' }],
       };
 
       setQuestions([
@@ -159,26 +141,21 @@ function Poll({ onClose }) {
         toast.error('User not logged in');
         return;
       }
-  
-      console.log('Creating poll with questions:', questions);
-  
+
       const formattedQuestions = questions.map((question) => ({
         text: question.text,
         selectedType: question.selectedType,
         options: question.options[question.selectedType],
       }));
-  
+
       const pollData = {
         userId,
         questions: formattedQuestions,
+        uniqueId: pollData?.uniqueId, // Use existing uniqueId if editing
       };
-  
-      console.log('Sending poll data:', pollData);
-  
+
       const response = await createPoll(pollData);
-  
-      console.log('Poll creation response:', response);
-  
+
       if (response && response.uniqueUrl) {
         setUniqueUrl(`${window.location.origin}/poll/${response.uniqueUrl}`);
         setShowPublishSuccess(true);
@@ -186,11 +163,9 @@ function Poll({ onClose }) {
         throw new Error('Unique URL not generated.');
       }
     } catch (error) {
-      console.error('Poll creation error:', error);
       toast.error(error.message || 'Failed to create/update poll');
     }
   };
-  
 
   return (
     <div>
