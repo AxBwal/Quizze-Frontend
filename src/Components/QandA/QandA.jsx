@@ -1,36 +1,113 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { createQuiz } from '../../api/createQuiz'; // Adjust the import path as needed
-import PublishSuccess from '../PublishSuccess/PublishSuccess'; // Import the new component
+import PublishSuccess from '../PublishSuccess/PublishSuccess';
 import styles from './QandA.module.css';
 
-function QandA({ onClose }) {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      text: '',
-      options: {
-        Text: [
-          { value: '', isCorrect: false },
-          { value: '', isCorrect: false }
-        ],
-        Image: [
-          { value: '', isCorrect: false },
-          { value: '', isCorrect: false }
-        ],
-        TextImage: [
-          { text: '', image: '', isCorrect: false },
-          { text: '', image: '', isCorrect: false }
-        ]
-      },
-      selectedType: 'Text',
-      timer: 'OFF',
-    },
-  ]);
+function QandA() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const quizData = location.state?.item;
+
+  // Logging quizData to check if it's received properly
+  console.log("Received quizData from location:", quizData);
+
+  const [questions, setQuestions] = useState(() => {
+    if (quizData) {
+      return quizData.questions.map((q, index) => ({
+        id: index + 1,
+        text: q.text,
+        selectedType: q.selectedType,
+        timer: q.timer,
+        options: {
+          Text: q.selectedType === 'Text' ? q.options : [],
+          Image: q.selectedType === 'Image' ? q.options : [],
+          TextImage: q.selectedType === 'TextImage' ? q.options : [],
+        },
+      }));
+    } else {
+      return [{
+        id: 1,
+        text: '',
+        options: {
+          Text: [
+            { value: '', isCorrect: false },
+            { value: '', isCorrect: false },
+          ],
+          Image: [
+            { value: '', isCorrect: false },
+            { value: '', isCorrect: false },
+          ],
+          TextImage: [
+            { text: '', image: '', isCorrect: false },
+            { text: '', image: '', isCorrect: false },
+          ],
+        },
+        selectedType: 'Text',
+        timer: 'OFF',
+      }];
+    }
+  });
+
   const [selectedQuestion, setSelectedQuestion] = useState(1);
   const [showPublishSuccess, setShowPublishSuccess] = useState(false);
-  const [uniqueUrl, setUniqueUrl] = useState('');
+  const [uniqueUrl, setUniqueUrl] = useState(quizData?.uniqueId || ''); // Initialize with existing uniqueId if editing
+  const isEditing = !!quizData; // Check if we are editing an existing quiz
+
+  // Logging the state variables for debugging
+  console.log("uniqueUrl:", uniqueUrl);
+  console.log("isEditing:", isEditing);
+
+  const handleCreateOrUpdateQuiz = async () => {
+    try {
+      const userId = localStorage.getItem('user');
+      console.log("User ID:", userId);
+
+      if (!userId) {
+        toast.error('User not logged in');
+        return;
+      }
+
+      const formattedQuestions = questions.map((question) => ({
+        text: question.text,
+        selectedType: question.selectedType,
+        timer: question.timer,
+        options: question.options[question.selectedType],
+      }));
+
+      const quizData = {
+        userId,
+        questions: formattedQuestions,
+        ...(isEditing && { uniqueId: uniqueUrl }), // Only include uniqueId if editing
+      };
+
+      console.log("Sending quizData to server:", quizData);
+
+      const response = await createQuiz(quizData);
+
+      if (response && response.uniqueUrl) {
+        console.log("Received response from server:", response);
+        setUniqueUrl(response.uniqueUrl);
+        setShowPublishSuccess(true);
+      } else {
+        throw new Error('Unique URL not generated.');
+      }
+    } catch (error) {
+      console.error("Error during quiz creation/updating:", error);
+      toast.error(error.message || 'Failed to create or update quiz');
+    }
+  };
+
+  const handleCancel = () => {
+    const userId = localStorage.getItem('user');
+    if (userId) {
+      navigate(`/analytics/${userId}`);
+    } else {
+      toast.error('User ID not found. Cannot redirect to analytics.');
+    }
+  };
 
   const addQuestion = () => {
     if (questions.length < 5) {
@@ -161,56 +238,10 @@ function QandA({ onClose }) {
     setQuestions(updatedQuestions);
   };
 
-  const handleCreateQuiz = async () => {
-    try {
-      const userId = localStorage.getItem('user');
-      if (!userId) {
-        toast.error('User not logged in');
-        return;
-      }
-  
-      const formattedQuestions = questions.map((question) => ({
-        text: question.text,
-        selectedType: question.selectedType,
-        timer: question.timer,
-        options: question.options[question.selectedType],
-      }));
-  
-      const quizData = {
-        userId,
-        questions: formattedQuestions,
-      };
-  
-      const response = await createQuiz(quizData);
-  
-      // Log the response to debug
-      console.log('Full response:', response);
-  
-      // Corrected access to uniqueUrl
-      if (response && response.uniqueUrl) {
-        const uniqueUrl = response.uniqueUrl;
-        console.log('Unique URL:', uniqueUrl);
-        setUniqueUrl(uniqueUrl);
-        setShowPublishSuccess(true);
-      } else {
-        throw new Error('Unique URL not generated.');
-      }
-    } catch (error) {
-      toast.error(error.message || 'Failed to create quiz');
-      console.error('Error during quiz creation:', error);
-    }
-  };
-  
-  
-  
-  
-  
-  
-
   return (
     <div>
       {showPublishSuccess ? (
-        <PublishSuccess uniqueUrl={uniqueUrl} onClose={onClose} />
+        <PublishSuccess uniqueUrl={uniqueUrl} onClose={handleCancel} />
       ) : (
         <div className={styles.qandaContainer}>
           <div className={styles.header}>
@@ -392,8 +423,10 @@ function QandA({ onClose }) {
             )}
           </div>
           <div className={styles.footer}>
-            <button className={styles.cancelButton} onClick={onClose}>Cancel</button>
-            <button className={styles.createQuizButton} onClick={handleCreateQuiz}>Create Quiz</button>
+            <button className={styles.cancelButton} onClick={handleCancel}>Cancel</button>
+            <button className={styles.createQuizButton} onClick={handleCreateOrUpdateQuiz}>
+              {isEditing ? 'Update Quiz' : 'Create Quiz'}
+            </button>
           </div>
         </div>
       )}

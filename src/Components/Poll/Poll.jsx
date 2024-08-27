@@ -1,34 +1,53 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { FaTimes } from 'react-icons/fa';
 import { createPoll } from '../../api/createPoll';
 import PollShareModal from '../PollShareModal/PollShareModal';
 import styles from './Poll.module.css';
 
 function Poll({ onClose }) {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      text: '',
-      options: {
-        Text: [
-          { value: '' },
-          { value: '' },
-        ],
-        Image: [
-          { value: '' },
-          { value: '' },
-        ],
-        TextImage: [
-          { text: '', image: '' },
-          { text: '', image: '' },
-        ],
-      },
-      selectedType: 'Text',
-    },
-  ]);
+  const location = useLocation();
+  const pollData = location.state?.item;
+
+  const [questions, setQuestions] = useState(() => {
+    if (pollData) {
+      return pollData.questions.map((q, index) => ({
+        id: index + 1,
+        text: q.text,
+        selectedType: q.selectedType,
+        options: {
+          Text: q.selectedType === 'Text' ? q.options : [],
+          Image: q.selectedType === 'Image' ? q.options : [],
+          TextImage: q.selectedType === 'TextImage' ? q.options : [],
+        },
+      }));
+    } else {
+      return [{
+        id: 1,
+        text: '',
+        options: {
+          Text: [
+            { value: '' },
+            { value: '' },
+          ],
+          Image: [
+            { value: '' },
+            { value: '' },
+          ],
+          TextImage: [
+            { text: '', image: '' },
+            { text: '', image: '' },
+          ],
+        },
+        selectedType: 'Text',
+      }];
+    }
+  });
+
   const [selectedQuestion, setSelectedQuestion] = useState(1);
   const [showPublishSuccess, setShowPublishSuccess] = useState(false);
-  const [uniqueUrl, setUniqueUrl] = useState('');
+  const [uniqueUrl, setUniqueUrl] = useState(pollData?.uniqueId || '');
 
   const addQuestion = () => {
     if (questions.length < 5) {
@@ -140,31 +159,32 @@ function Poll({ onClose }) {
         toast.error('User not logged in');
         return;
       }
-
+  
       const formattedQuestions = questions.map((question) => ({
         text: question.text,
         selectedType: question.selectedType,
         options: question.options[question.selectedType],
       }));
-
+  
       const pollData = {
         userId,
         questions: formattedQuestions,
+        uniqueId, // Use the existing uniqueId for updates
       };
-
+  
       const response = await createPoll(pollData);
-
+  
       if (response && response.uniqueUrl) {
-        const uniqueUrl = `${window.location.origin}/poll/${response.uniqueUrl}`;
-        setUniqueUrl(uniqueUrl);
+        setUniqueUrl(`${window.location.origin}/poll/${response.uniqueUrl}`);
         setShowPublishSuccess(true);
       } else {
         throw new Error('Unique URL not generated.');
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to create poll');
+      toast.error(error.message || 'Failed to create/update poll');
     }
   };
+  
 
   return (
     <div>
@@ -172,7 +192,6 @@ function Poll({ onClose }) {
         <PollShareModal uniqueUrl={uniqueUrl} onClose={onClose} />
       ) : (
         <div className={styles.pollContainer}>
-          {/* Poll creation UI */}
           <div className={styles.header}>
             {questions.map((question) => (
               <div key={question.id} className={styles.questionItem}>

@@ -1,51 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import styles from "../AnalyticsPage/AnalyticsPage.module.css"; // Assuming you have a CSS module
+import styles from "../AnalyticsPage/AnalyticsPage.module.css";
 import ConfirmationPopup from "../../Components/ConfirmationPopup/ConfirmationPopup";
-// Import the new popup component
 
 function AnalyticsPage() {
   const { userId } = useParams();
-  const [quizzes, setQuizzes] = useState([]);
+  const navigate = useNavigate();
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [quizToDelete, setQuizToDelete] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
-    const fetchQuizzes = async () => {
+    const fetchItems = async () => {
       try {
-        console.log("Fetching quizzes for user:", userId);
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:3000/quiz/user/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Quizzes fetched:", response.data);
-        setQuizzes(response.data);
+        const response = await axios.get(`http://localhost:3000/quiz/analytics/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setItems(response.data);
       } catch (error) {
-        console.error("Error fetching quizzes:", error);
         setError(error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchQuizzes();
+    fetchItems();
   }, [userId]);
 
-  const handleShareQuiz = async (quizId) => {
-    console.log("Attempting to fetch quiz with ID:", quizId); // Log the quizId being used
-
+  const handleShareItem = async (item) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/quiz/id/${quizId}`,
+        `http://localhost:3000/${item.type === "poll" ? "poll" : "quiz"}/id/${item._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -53,40 +45,34 @@ function AnalyticsPage() {
         }
       );
 
-      console.log("Response from backend:", response.data); // Log the response from the backend
-
       if (response.data && response.data.uniqueId) {
-        const shareableLink = `${window.location.origin}/sharedquiz/${response.data.uniqueId}`;
-        console.log("Generated shareable link:", shareableLink); // Log the generated shareable link
-
-        // Use navigator.clipboard API to copy the link
+        const shareableLink = `${window.location.origin}/${
+          item.type === "poll" ? "poll" : "sharedquiz"
+        }/${response.data.uniqueId}`;
         await navigator.clipboard.writeText(shareableLink);
         toast.success("Link copied to clipboard");
       } else {
-        console.error("Unique ID not found in the quiz data");
         toast.error("Failed to generate share link");
       }
     } catch (error) {
-      console.error("Failed to fetch the share link:", error.message); // Log the error message
       toast.error("Failed to fetch the share link");
     }
   };
 
-  const handleDeleteQuiz = (quizId) => {
-    setQuizToDelete(quizId);
+  const handleDeleteItem = (itemId, itemType) => {
+    setItemToDelete({ id: itemId, type: itemType === "poll" ? "poll" : "quiz" });
     setShowDeletePopup(true);
   };
 
-  const confirmDeleteQuiz = async () => {
-    if (!quizToDelete) {
-      toast.error("No quiz selected for deletion");
+  const confirmDeleteItem = async () => {
+    if (!itemToDelete) {
+      toast.error("No item selected for deletion");
       return;
     }
 
     try {
-      console.log("Attempting to delete quiz with ID:", quizToDelete); // Log the quizId being deleted
       const response = await axios.delete(
-        `http://localhost:3000/quiz/delete/${quizToDelete}`,
+        `http://localhost:3000/${itemToDelete.type}/delete/${itemToDelete.id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -94,22 +80,28 @@ function AnalyticsPage() {
         }
       );
 
-      console.log("Delete response:", response.data); // Log the response from the delete request
-
       if (response.status === 200) {
-        setQuizzes(quizzes.filter((quiz) => quiz._id !== quizToDelete));
-        toast.success("Quiz deleted successfully");
+        setItems(items.filter((item) => item._id !== itemToDelete.id));
+        toast.success("Item deleted successfully");
       } else {
-        toast.error("Failed to delete the quiz");
+        toast.error("Failed to delete the item");
       }
     } catch (error) {
-      console.error("Error deleting quiz:", error.message); // Log the error message
-      toast.error("Failed to delete the quiz");
+      toast.error("Failed to delete the item");
     } finally {
       setShowDeletePopup(false);
-      setQuizToDelete(null);
+      setItemToDelete(null);
     }
   };
+
+  const handleEditItem = (item) => {
+    console.log("Navigating with item:", item);
+    navigate(`/quiz/edit/${item._id}`, {
+      state: { item }, // Passing the quiz data via state
+    });
+  };
+  
+  
 
   if (loading) {
     return <div>Loading...</div>;
@@ -122,38 +114,40 @@ function AnalyticsPage() {
   return (
     <div className={styles.analyticsContainer}>
       <h2>Quiz Analysis</h2>
-      <table className={styles.analyticsTable}>
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>Quiz Name</th>
-            <th>Created On</th>
-            <th>Impressions</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {quizzes.map((quiz, index) => (
-            <tr key={quiz._id}>
-              <td>{index + 1}</td>
-              <td>{`Quiz ${index + 1}`}</td>
-              <td>{new Date(quiz.createdAt).toLocaleDateString()}</td>
-              <td>{quiz.impressions}</td>
-              <td>
-                <button onClick={() => handleShareQuiz(quiz._id)}>Share</button>
-                <button onClick={() => handleDeleteQuiz(quiz._id)}>
-                  Delete
-                </button>
-              </td>
+      {items.length === 0 ? (
+        <p>No data to show.</p>
+      ) : (
+        <table className={styles.analyticsTable}>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Name</th>
+              <th>Created On</th>
+              <th></th> {/* Empty header for actions */}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {items.map((item, index) => (
+              <tr key={item._id}>
+                <td>{index + 1}</td>
+                <td>{`Quiz ${index + 1}`}</td>
+                <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                <td className={styles.actionsColumn}>
+                  <button onClick={() => handleEditItem(item)}>Question Wise Analysis</button>
+                  <button onClick={() => handleShareItem(item)}>Share</button>
+                  <button onClick={() => handleEditItem(item)}>Edit</button> {/* Connected to the edit handler */}
+                  <button onClick={() => handleDeleteItem(item._id, item.type)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       {showDeletePopup && (
         <ConfirmationPopup
-          message="Are you sure you want to delete this quiz?"
-          onConfirm={confirmDeleteQuiz}
+          message="Are you sure you want to delete this item?"
+          onConfirm={confirmDeleteItem}
           onCancel={() => setShowDeletePopup(false)}
         />
       )}

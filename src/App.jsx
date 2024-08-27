@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Signup from './Pages/Signup/Signup';
@@ -9,6 +8,7 @@ import SharedQuiz from './Components/SharedQuiz/SharedQuiz';
 import QandA from './Components/QandA/QandA';
 import SharedPoll from './Components/SharedPoll/SharedPoll';
 import AnalyticsPage from './Pages/AnalyticsPage/AnalyticsPage';
+import Poll from './Components/Poll/Poll';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,9 +40,12 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard/:userId" element={<Dashboard handleLogout={handleLogout} />} />
         <Route path="/sharedquiz/:uniqueUrl" element={<SharedQuiz />} />
-        <Route path="/poll/:uniqueUrl" element={<SharedPoll />} /> {/* Corrected this line */}
+        <Route path="/poll/:uniqueUrl" element={<SharedPoll />} />
         <Route path="/createquiz" element={<QandA />} />
         <Route path="/analytics/:userId" element={<AnalyticsPage />} />
+        {/* Adding routes for editing quizzes and polls */}
+        <Route path="/quiz/edit/:quizId" element={<QandA />} />
+        <Route path="/poll/edit/:pollId" element={<Poll />} />
       </Routes>
     </div>
   );
