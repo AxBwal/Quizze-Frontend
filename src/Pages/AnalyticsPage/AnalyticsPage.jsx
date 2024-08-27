@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import styles from "../AnalyticsPage/AnalyticsPage.module.css";
 import ConfirmationPopup from "../../Components/ConfirmationPopup/ConfirmationPopup";
+import CreateQuizPopup from "../../Components/CreateQuizPopup/CreateQuizPopup"; // Import CreateQuizPopup
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoShareSocialSharp } from "react-icons/io5";
@@ -16,6 +17,7 @@ function AnalyticsPage() {
   const [error, setError] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [showCreateQuizPopup, setShowCreateQuizPopup] = useState(false); // State for showing the Create Quiz popup
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -107,6 +109,14 @@ function AnalyticsPage() {
     navigate(`/quiz/analysis/${item._id}`);
   };
 
+  const openCreateQuizPopup = () => {
+    setShowCreateQuizPopup(true);
+  };
+
+  const closeCreateQuizPopup = () => {
+    setShowCreateQuizPopup(false);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -122,7 +132,7 @@ function AnalyticsPage() {
         <ul className={styles.navList}>
           <li onClick={() => navigate(`/dashboard/${userId}`)}>Dashboard</li>
           <li className={styles.active}>Analytics</li>
-          <li onClick={() => navigate(`/quiz/create`)}>Create Quiz</li>
+          <li onClick={openCreateQuizPopup}>Create Quiz</li> {/* Open popup on click */}
         </ul>
         <div className={styles.logoutSection}>
           <hr className={styles.divider} />
@@ -169,6 +179,10 @@ function AnalyticsPage() {
             onConfirm={confirmDeleteItem}
             onCancel={() => setShowDeletePopup(false)}
           />
+        )}
+
+        {showCreateQuizPopup && (
+          <CreateQuizPopup onClose={closeCreateQuizPopup} /> 
         )}
       </div>
     </div>
