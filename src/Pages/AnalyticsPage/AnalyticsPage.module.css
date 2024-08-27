@@ -118,16 +118,15 @@
 }
 
 .analyticsTable td button:first-of-type {
-  background-color: #ffc107;
-  color: white;
+  color: black;
 }
 
 .analyticsTable td button:nth-of-type(2) {
-  background-color: #28a745;
-  color: white;
+  
+  color: black;
 }
 
 .analyticsTable td button:last-of-type {
-  background-color: #dc3545;
-  color: white;
+ 
+  color: black;
 }

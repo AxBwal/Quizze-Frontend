@@ -4,6 +4,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import styles from "../AnalyticsPage/AnalyticsPage.module.css";
 import ConfirmationPopup from "../../Components/ConfirmationPopup/ConfirmationPopup";
+import { FaRegEdit } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoShareSocialSharp } from "react-icons/io5";
 
 function AnalyticsPage() {
   const { userId } = useParams();
@@ -139,7 +142,7 @@ function AnalyticsPage() {
                 <th>S.No</th>
                 <th>Name</th>
                 <th>Created On</th>
-                <th>Actions</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -149,10 +152,10 @@ function AnalyticsPage() {
                   <td>{`Quiz ${index + 1}`}</td>
                   <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                   <td className={styles.actionsColumn}>
+                    <button onClick={() => handleEditItem(item)}><FaRegEdit color="#854CFF" size={"20px"} /></button>
+                    <button onClick={() => handleDeleteItem(item._id, item.type)}><RiDeleteBin6Line color="#D60000" size={"20px"}  /></button>
+                    <button onClick={() => handleShareItem(item)}><IoShareSocialSharp color="#60B84B" size={"20px"}   /></button>
                     <button onClick={() => handleQuestionWiseAnalysis(item)}>Question Wise Analysis</button>
-                    <button onClick={() => handleShareItem(item)}>Share</button>
-                    <button onClick={() => handleEditItem(item)}>Edit</button>
-                    <button onClick={() => handleDeleteItem(item._id, item.type)}>Delete</button>
                   </td>
                 </tr>
               ))}
