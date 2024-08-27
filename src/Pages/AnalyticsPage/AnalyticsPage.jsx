@@ -112,7 +112,6 @@ function AnalyticsPage() {
       navigate(`/quiz/analysis/${item._id}`);
     }
   };
-  
 
   const openCreateQuizPopup = () => {
     setShowCreateQuizPopup(true);
@@ -147,7 +146,7 @@ function AnalyticsPage() {
         </div>
       </div>
       <div className={styles.mainContent}>
-        <h2>Quiz Analysis</h2>
+        <h2 className={styles.headingh2}>Quiz Analysis</h2>
         {items.length === 0 ? (
           <p>No data to show.</p>
         ) : (
@@ -157,6 +156,7 @@ function AnalyticsPage() {
                 <th>S.No</th>
                 <th>Name</th>
                 <th>Created On</th>
+                <th>Impressions</th> {/* New column for Impressions */}
                 <th></th>
               </tr>
             </thead>
@@ -166,6 +166,7 @@ function AnalyticsPage() {
                   <td>{index + 1}</td>
                   <td>{`Quiz ${index + 1}`}</td>
                   <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                  <td>{item.impressions || 0}</td> {/* Displaying the impressions value */}
                   <td className={styles.actionsColumn}>
                     <button onClick={() => handleEditItem(item)}><FaRegEdit color="#854CFF" size={"20px"} /></button>
                     <button onClick={() => handleDeleteItem(item._id, item.type)}><RiDeleteBin6Line color="#D60000" size={"20px"}  /></button>
@@ -195,3 +196,5 @@ function AnalyticsPage() {
 }
 
 export default AnalyticsPage;
+
+

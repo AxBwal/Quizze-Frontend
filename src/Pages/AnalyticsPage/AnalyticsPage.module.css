@@ -1,3 +1,9 @@
+.headingh2{
+  text-align: center;
+  color: #5076FF;
+  font-weight: 600;
+  font-size: 30px;
+}
 .analyticsContainer {
   display: flex;
   height: 100vh;
@@ -91,42 +97,43 @@
 
 .analyticsTable th,
 .analyticsTable td {
-  border: 1px solid #ddd;
+  border: none; /* Remove all borders */
   padding: 12px;
   text-align: center;
   font-size: 16px;
+  border-bottom: 1px solid #ddd; /* Keep only the bottom border */
 }
 
 .analyticsTable th {
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: #5076FF; /* Updated background color */
+  color: #ffffff; /* Updated text color for better readability */
 }
 
 .analyticsTable tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #B3C4FF;
 }
 
-.analyticsTable tr:hover {
-  background-color: #f1f1f1;
+
+
+.analyticsTable td .actionsColumn {
+  display: flex;
+  justify-content: flex-start; /* Align icons to the left */
+  align-items: center;
+  gap: 15px; /* Adjust the gap between icons */
 }
 
-.analyticsTable td button {
-  padding: 5px 10px;
-  margin: 0 5px;
+.analyticsTable td button,
+.analyticsTable td a {
+  padding: 0;
+  margin: 0;
   border: none;
   cursor: pointer;
+  background: none; /* Remove background */
+  text-decoration: none; /* Remove underline if any */
+  box-shadow: none; /* Remove shadow */
 }
 
-.analyticsTable td button:first-of-type {
-  color: black;
-}
-
-.analyticsTable td button:nth-of-type(2) {
-  
-  color: black;
-}
-
-.analyticsTable td button:last-of-type {
- 
-  color: black;
+.analyticsTable td a {
+  text-decoration: underline; /* Underline the text for Question Wise Analysis */
+  color: #5076FF; /* Same color as table headers */
 }
