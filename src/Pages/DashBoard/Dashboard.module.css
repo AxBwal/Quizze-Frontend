@@ -101,24 +101,24 @@
 }
 
 .cardLabel {
-  margin-top: 15px; /* Add some space between the "0" and the label */
+  margin-top: 15px; 
   font-size: 18px;
-  color: inherit; /* Make sure the label color inherits from cardCount */
+  color: inherit; 
 }
 
 .card:nth-child(1) .cardLabel,
 .card:nth-child(1) .cardCount {
-  color: #ff5722; /* Color for the first card */
+  color: #ff5722; 
 }
 
 .card:nth-child(2) .cardLabel,
 .card:nth-child(2) .cardCount {
-  color: #4caf50; /* Color for the second card */
+  color: #4caf50; 
 }
 
 .card:nth-child(3) .cardLabel,
 .card:nth-child(3) .cardCount {
-  color: #2196f3; /* Color for the third card */
+  color: #2196f3; 
 }
 
 .trendingHeading {
@@ -126,4 +126,57 @@
   font-weight: bold;
   color: #000;
   margin-top: 40px;
+}
+
+.trendingItemsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  justify-content: start; 
+}
+
+.trendingItem {
+  width: 200px; 
+  background-color: #ffffff; 
+  border-radius: 10px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+  padding: 15px; 
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer; 
+}
+
+.trendingItem:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.trendingItem .itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.trendingItem .itemTitle {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.trendingItem .impressions {
+  display: flex;
+  align-items: center;
+  color: #FF5D01; 
+}
+
+.trendingItem .itemDate {
+  margin-bottom: 0; 
+  font-size: 14px; 
+  color: #60B84B; 
+}
+
+.errorMessage {
+  color: red;
+  font-size: 16px;
+  margin-top: 20px;
 }

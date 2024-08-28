@@ -14,14 +14,23 @@ function SharedQuiz() {
   const [quizCompleted, setQuizCompleted] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/quiz/${uniqueUrl}`)
-      .then((response) => {
+    const fetchQuizData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/quiz/${uniqueUrl}`);
         setQuizData(response.data);
+
+        // Start the timer for the first question
         startTimer(response.data.questions[0].timer);
-      })
-      .catch((error) => {
+
+        // Increment the impressions count
+        await axios.post(`http://localhost:3000/quiz/impressions`, { uniqueUrl });
+
+      } catch (error) {
         console.error('Failed to load quiz:', error);
-      });
+      }
+    };
+
+    fetchQuizData();
   }, [uniqueUrl]);
 
   const startTimer = (time) => {
@@ -63,14 +72,16 @@ function SharedQuiz() {
   const saveResponse = () => {
     if (!quizData || !quizData.questions) return;
 
-    const isCorrect = quizData.questions[currentQuestion].options[selectedOption].isCorrect;
+    const isCorrect = quizData.questions[currentQuestion].options[selectedOption]?.isCorrect || false;
     if (isCorrect) {
       setCorrectAnswers(correctAnswers + 1);
     }
     axios.post('http://localhost:3000/quiz/response', {
       uniqueUrl,
-      questionId: quizData.questions[currentQuestion].id,
+      questionId: quizData.questions[currentQuestion]._id,
       isCorrect,
+    }).catch(error => {
+      console.error('Failed to save response:', error);
     });
   };
 
