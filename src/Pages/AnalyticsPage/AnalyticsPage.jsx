@@ -113,8 +113,10 @@ function AnalyticsPage() {
 
   const handleQuestionWiseAnalysis = (item) => {
     if (item.type === "poll") {
-      navigate(`/poll/analysis/${item._id}`);
-    } else {
+      navigate(`/poll/edit/${item._id}`, {
+          state: { item }, // Passing the poll data via state
+      });
+  } else {
       navigate(`/quiz/analysis/${item._id}`);
     }
   };

@@ -10,9 +10,10 @@ export const createPoll = async (pollData) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
       },
     });
-    return response.data;
+    return response.data; // Return the data on success
   } catch (error) {
-    throw error.response ? error.response.data : new Error('Failed to create poll');
+    console.error('Error in createPoll:', error.response ? error.response.data : error.message);
+    throw error.response ? new Error(error.response.data.message || 'Failed to create poll') : new Error('Failed to create poll');
   }
 };
 
@@ -24,9 +25,10 @@ export const updatePoll = async (pollId, pollData) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
       },
     });
-    return response.data;
+    return response.data; // Return the data on success
   } catch (error) {
-    throw error.response ? error.response.data : new Error('Failed to update poll');
+    console.error('Error in updatePoll:', error.response ? error.response.data : error.message);
+    throw error.response ? new Error(error.response.data.message || 'Failed to update poll') : new Error('Failed to update poll');
   }
 };
 
@@ -36,7 +38,8 @@ export const getPoll = async (uniqueUrl) => {
     const response = await axios.get(`${BACKEND_ORIGIN_URL}/poll/${uniqueUrl}`);
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : new Error('Failed to fetch poll');
+    console.error('Error in getPoll:', error.response ? error.response.data : error.message);
+    throw error.response ? new Error(error.response.data.message || 'Failed to fetch poll') : new Error('Failed to fetch poll');
   }
 };
 
@@ -46,6 +49,7 @@ export const submitPollResponse = async (responseData) => {
     const response = await axios.post(`${BACKEND_ORIGIN_URL}/poll/response`, responseData);
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : new Error('Failed to submit response');
+    console.error('Error in submitPollResponse:', error.response ? error.response.data : error.message);
+    throw error.response ? new Error(error.response.data.message || 'Failed to submit response') : new Error('Failed to submit response');
   }
 };

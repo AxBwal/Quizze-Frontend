@@ -1,11 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import styles from '../PublishSuccess/PublishSuccess.module.css';
 
 function PublishSuccess({ uniqueUrl }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const userId = localStorage.getItem('user'); // Retrieve the userId from localStorage
 
   const quizLink = `http://localhost:5173/sharedquiz/${uniqueUrl}`;
@@ -16,7 +17,12 @@ function PublishSuccess({ uniqueUrl }) {
   };
 
   const handleClose = () => {
-    navigate(`/dashboard/${userId}`); // Redirect to the dashboard with the userId
+    console.log('Close button clicked');
+    if (userId) {
+      navigate(`/analytics/${userId}`, { state: location.state }); // Pass along any relevant state
+    } else {
+      console.error('User ID is missing, cannot navigate');
+    }
   };
 
   return (

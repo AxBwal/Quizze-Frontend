@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
-import { updatePoll } from '../../api/createPoll'; // Assuming you have an API function to update the poll
+import { createPoll, updatePoll } from '../../api/createPoll'; // Assuming you have an API function to create/update the poll
 import PollShareModal from '../PollShareModal/PollShareModal';
 import styles from './Poll.module.css';
 
@@ -157,22 +157,33 @@ function Poll({ onClose }) {
       const pollPayload = {
         userId,
         questions: formattedQuestions,
-        uniqueId: pollData?.uniqueId, // Use the existing uniqueId to update the poll
       };
   
-      const response = await updatePoll(pollData._id, pollPayload); // Assuming you have an updatePoll function that takes the poll ID and payload
-  
-      if (response && response.poll) { // Checking the correct response
-        setUniqueUrl(`${window.location.origin}/poll/${response.poll.uniqueId}`);
-        setShowPublishSuccess(true);
-        toast.success('Poll updated successfully');
+      let response;
+      if (pollData && pollData._id) {
+        // Update the existing poll
+        response = await updatePoll(pollData._id, pollPayload);
       } else {
-        throw new Error('Failed to update the poll.');
+        // Create a new poll
+        console.log('Calling createPoll with payload:', pollPayload);
+        response = await createPoll(pollPayload);
+      }
+  
+      if (response) {
+        const url = response.uniqueUrl ? `${window.location.origin}/poll/${response.uniqueUrl}` : uniqueUrl;
+        setUniqueUrl(url);
+        setShowPublishSuccess(true);
+        toast.success(`Poll ${pollData ? 'updated' : 'created'} successfully`);
+      } else {
+        throw new Error('Unexpected error: Missing unique URL in response.');
       }
     } catch (error) {
+      console.error('Error in handleUpdatePoll:', error.message);
       toast.error(error.message || 'Failed to update the poll');
     }
   };
+  
+  
   
 
   return (
@@ -319,7 +330,7 @@ function Poll({ onClose }) {
               Cancel
             </button>
             <button className={styles.createQuizButton} onClick={handleUpdatePoll}>
-              Update Poll
+              {pollData ? 'Update Poll' : 'Create Poll'}
             </button>
           </div>
         </div>

@@ -13,7 +13,7 @@ function PollShareModal({ uniqueUrl }) {
   };
 
   const handleClose = () => {
-    navigate(`/dashboard/${userId}`); // Redirect to the dashboard with the userId
+    navigate(`/analytics/${userId}`); // Redirect to the dashboard with the userId
   };
 
   return (
