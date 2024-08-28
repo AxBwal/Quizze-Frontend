@@ -8,35 +8,50 @@ import CreateQuizPopup from '../../Components/CreateQuizPopup/CreateQuizPopup';
 function Dashboard({ handleLogout }) {
   const [showPopup, setShowPopup] = useState(false);
   const [trendingItems, setTrendingItems] = useState([]);
+  const [totalImpressions, setTotalImpressions] = useState(0);
+  const [quizzesCreated, setQuizzesCreated] = useState(0);
+  const [questionsCreated, setQuestionsCreated] = useState(0); // New state for questions created
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTrendingItems = async () => {
+    const fetchAnalyticsData = async () => {
       try {
-        setLoading(true);
         const token = localStorage.getItem('token');
-
         const response = await axios.get(`http://localhost:3000/quiz/analytics/${localStorage.getItem('user')}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const filteredItems = response.data
-          .filter(item => item.impressions >= 10)
-         
+        const items = response.data;
+        const totalImpressions = items.reduce((acc, item) => acc + (item.impressions || 0), 0);
+        const quizzesCreated = items.length;
+        const questionsCreated = items.reduce((acc, item) => acc + (item.questions ? item.questions.length : 0), 0);
 
+        setTotalImpressions(totalImpressions);
+        setQuizzesCreated(quizzesCreated);
+        setQuestionsCreated(questionsCreated); // Set the questions created count
+
+        // Filter items for trending section
+        const filteredItems = items.filter(item => item.impressions >= 10);
         setTrendingItems(filteredItems);
       } catch (err) {
-        console.error('Failed to fetch trending items', err);
-        setError('Failed to load trending items. Please try again later.');
+        console.error('Failed to fetch analytics data', err);
+        setError('Failed to load analytics data. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTrendingItems();
+    fetchAnalyticsData();
   }, []);
+
+  const formatNumber = (num) => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'k';
+    }
+    return num;
+  };
 
   const logoutHandler = () => {
     handleLogout();
@@ -75,15 +90,19 @@ function Dashboard({ handleLogout }) {
       <div className={styles.mainContent}>
         <div className={styles.cards}>
           <div className={styles.card}>
-            <div className={styles.cardCount}>0</div>
+            <div className={styles.cardCount}>{formatNumber(quizzesCreated)}</div>
             <div className={styles.cardLabel}>Quizzes Created</div>
           </div>
           <div className={styles.card}>
-            <div className={styles.cardCount}>0</div>
+            <div className={styles.cardCount}>{formatNumber(questionsCreated)}</div>
             <div className={styles.cardLabel}>Questions Created</div>
           </div>
           <div className={styles.card}>
-            <div className={styles.cardCount}>0</div>
+            <div
+              className={`${styles.cardCount} ${totalImpressions >= 1000 ? styles.highlight : ''}`}
+            >
+              {formatNumber(totalImpressions)}
+            </div>
             <div className={styles.cardLabel}>Total Impressions</div>
           </div>
         </div>
