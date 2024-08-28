@@ -192,7 +192,7 @@ function AnalyticsPage() {
 
         {showDeletePopup && (
           <ConfirmationPopup
-            message="Are you sure you want to delete this item?"
+            message="Are you confirm you want to delete ?"
             onConfirm={confirmDeleteItem}
             onCancel={() => setShowDeletePopup(false)}
           />
