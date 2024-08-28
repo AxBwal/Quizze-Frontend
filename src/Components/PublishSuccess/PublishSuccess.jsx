@@ -1,9 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import styles from '../PublishSuccess/PublishSuccess.module.css';
 
-function PublishSuccess({ uniqueUrl, onClose }) {
+function PublishSuccess({ uniqueUrl }) {
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('user'); // Retrieve the userId from localStorage
+
   const quizLink = `http://localhost:5173/sharedquiz/${uniqueUrl}`;
 
   const handleCopyLink = () => {
@@ -11,10 +15,14 @@ function PublishSuccess({ uniqueUrl, onClose }) {
     toast.success('Link copied to Clipboard!');
   };
 
+  const handleClose = () => {
+    navigate(`/dashboard/${userId}`); // Redirect to the dashboard with the userId
+  };
+
   return (
     <div className={styles.publishSuccessContainer}>
       <div className={styles.header}>
-        <button className={styles.closeButton} onClick={onClose}>
+        <button className={styles.closeButton} onClick={handleClose}>
           <FaTimes />
         </button>
       </div>

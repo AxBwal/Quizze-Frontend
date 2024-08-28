@@ -16,6 +16,20 @@ export const createPoll = async (pollData) => {
   }
 };
 
+// API to update a poll
+export const updatePoll = async (pollId, pollData) => {
+  try {
+    const response = await axios.put(`${BACKEND_ORIGIN_URL}/poll/update/${pollId}`, pollData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('Failed to update poll');
+  }
+};
+
 // API to retrieve a poll by its unique URL
 export const getPoll = async (uniqueUrl) => {
   try {

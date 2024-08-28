@@ -100,9 +100,15 @@ function AnalyticsPage() {
   };
 
   const handleEditItem = (item) => {
-    navigate(`/quiz/edit/${item._id}`, {
-      state: { item }, // Passing the quiz data via state
-    });
+    if (item.type === "poll") {
+      navigate(`/poll/edit/${item._id}`, {
+        state: { item }, // Passing the poll data via state
+      });
+    } else {
+      navigate(`/quiz/edit/${item._id}`, {
+        state: { item }, // Passing the quiz data via state
+      });
+    }
   };
 
   const handleQuestionWiseAnalysis = (item) => {
@@ -196,5 +202,3 @@ function AnalyticsPage() {
 }
 
 export default AnalyticsPage;
-
-
