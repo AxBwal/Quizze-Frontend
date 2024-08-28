@@ -23,8 +23,8 @@ function Dashboard({ handleLogout }) {
         });
 
         const filteredItems = response.data
-          .filter(item => item.impressions > 10)
-          .sort((a, b) => b.impressions - a.impressions);
+          .filter(item => item.impressions >= 10)
+         
 
         setTrendingItems(filteredItems);
       } catch (err) {
