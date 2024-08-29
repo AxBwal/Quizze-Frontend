@@ -9,25 +9,14 @@ function SharedQuiz() {
   const [quizData, setQuizData] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [timer, setTimer] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
-
-  const isValidImageUrl = (url) => {
-    const imageUrlPattern = /\.(jpeg|jpg|gif|png|svg|webp)$/i;
-    return imageUrlPattern.test(url);
-  };
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/quiz/${uniqueUrl}`);
+        console.log('Quiz data:', response.data); // Log the fetched data
         setQuizData(response.data);
-
-        startTimer(response.data.questions[0].timer);
-
-        await axios.post(`http://localhost:3000/quiz/impressions`, { uniqueUrl });
-
       } catch (error) {
         console.error('Failed to load quiz:', error);
       }
@@ -35,27 +24,6 @@ function SharedQuiz() {
 
     fetchQuizData();
   }, [uniqueUrl]);
-
-  const startTimer = (time) => {
-    if (time !== 'OFF') {
-      setTimer(parseInt(time, 10));
-      const countdown = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer === 1) {
-            clearInterval(countdown);
-            handleNext();
-          }
-          return prevTimer - 1;
-        });
-      }, 1000);
-    }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}s`;
-  };
 
   const handleNext = () => {
     if (!quizData || !quizData.questions) return;
@@ -66,26 +34,26 @@ function SharedQuiz() {
     if (currentQuestion + 1 < quizData.questions.length) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedOption(null);
-      startTimer(quizData.questions[currentQuestion + 1].timer);
     } else {
       setQuizCompleted(true);
     }
   };
 
-  const saveResponse = () => {
+  const saveResponse = async () => {
     if (!quizData || !quizData.questions) return;
 
-    const isCorrect = quizData.questions[currentQuestion].options[selectedOption]?.isCorrect || false;
-    if (isCorrect) {
-      setCorrectAnswers(correctAnswers + 1);
-    }
-    axios.post('http://localhost:3000/quiz/response', {
+    const responseData = {
       uniqueUrl,
       questionId: quizData.questions[currentQuestion]._id,
-      isCorrect,
-    }).catch(error => {
-      console.error('Failed to save response:', error);
-    });
+      selectedOption: quizData.questions[currentQuestion].options[selectedOption].value,
+    };
+
+    try {
+      await axios.post('http://localhost:3000/quiz/response', responseData);
+      console.log('Response submitted successfully');
+    } catch (error) {
+      console.error('Failed to submit quiz response:', error);
+    }
   };
 
   if (!quizData) return <div>Loading...</div>;
@@ -98,25 +66,19 @@ function SharedQuiz() {
     <div className={styles.quizContainer}>
       <div className={styles.quizHeader}>
         <span>{`0${currentQuestion + 1}/0${quizData.questions.length}`}</span>
-        <span className={styles.quizTimer}>{timer > 0 ? formatTime(timer) : '00:00s'}</span>
       </div>
       <div className={styles.quizQuestion}>
-        {quizData.questions[currentQuestion].text}
+        {quizData.questions[currentQuestion]?.text}
       </div>
       <div className={styles.quizOptions}>
-        {quizData.questions[currentQuestion].options.map((option, index) => (
+        {quizData.questions[currentQuestion]?.options?.map((option, index) => (
           <div
             key={index}
             className={`${styles.quizOption} ${selectedOption === index ? styles.selected : ''}`}
             onClick={() => setSelectedOption(index)}
           >
-            {option.text && <div className={styles.optionText}>{option.text}</div>}
-            {isValidImageUrl(option.image) && (
-              <img src={option.image} alt={`Option ${index + 1}`} className={styles.quizImage} />
-            )}
-            {isValidImageUrl(option.value) && !option.text && (
-              <img src={option.value} alt={`Option ${index + 1}`} className={styles.quizImage} />
-            )}
+            {/* Render the value for text-based options */}
+            {option.value || <img src={option.image} alt={`Option ${index + 1}`} />}
           </div>
         ))}
       </div>
