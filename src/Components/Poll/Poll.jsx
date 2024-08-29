@@ -46,6 +46,29 @@ function Poll({ onClose }) {
     }
   }, [pollData]);
 
+  const validateForm = () => {
+    for (const question of questions) {
+      if (!question.text.trim()) {
+        toast.error(`Question ${question.id} is not filled. Please fill the question.`);
+        return false;
+      }
+      for (const option of question.options[question.selectedType]) {
+        if (question.selectedType === 'TextImage') {
+          if (!option.text.trim() || !option.image.trim()) {
+            toast.error(`Option in Question ${question.id} is not filled. Please fill all options.`);
+            return false;
+          }
+        } else {
+          if (!option.value.trim()) {
+            toast.error(`Option in Question ${question.id} is not filled. Please fill all options.`);
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  };
+
   const addQuestion = () => {
     if (questions.length < 5) {
       const initialOptions = {
@@ -141,6 +164,8 @@ function Poll({ onClose }) {
   };
 
   const handleUpdatePoll = async () => {
+    if (!validateForm()) return;
+
     try {
       const userId = localStorage.getItem('user');
       if (!userId) {
@@ -165,7 +190,6 @@ function Poll({ onClose }) {
         response = await updatePoll(pollData._id, pollPayload);
       } else {
         // Create a new poll
-        console.log('Calling createPoll with payload:', pollPayload);
         response = await createPoll(pollPayload);
       }
   
@@ -182,8 +206,6 @@ function Poll({ onClose }) {
       toast.error(error.message || 'Failed to update the poll');
     }
   };
-  
-  
   
 
   return (

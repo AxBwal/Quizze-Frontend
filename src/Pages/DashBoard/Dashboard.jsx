@@ -10,7 +10,7 @@ function Dashboard({ handleLogout }) {
   const [trendingItems, setTrendingItems] = useState([]);
   const [totalImpressions, setTotalImpressions] = useState(0);
   const [quizzesCreated, setQuizzesCreated] = useState(0);
-  const [questionsCreated, setQuestionsCreated] = useState(0); // New state for questions created
+  const [questionsCreated, setQuestionsCreated] = useState(0);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,9 +32,10 @@ function Dashboard({ handleLogout }) {
         setQuizzesCreated(quizzesCreated);
         setQuestionsCreated(questionsCreated); // Set the questions created count
 
-        // Filter items for trending section
+        // Filter and sort items for trending section
         const filteredItems = items.filter(item => item.impressions >= 10);
-        setTrendingItems(filteredItems);
+        const sortedTrendingItems = filteredItems.sort((a, b) => b.impressions - a.impressions);
+        setTrendingItems(sortedTrendingItems);
       } catch (err) {
         console.error('Failed to fetch analytics data', err);
         setError('Failed to load analytics data. Please try again later.');
@@ -121,7 +122,7 @@ function Dashboard({ handleLogout }) {
               <div key={item._id} className={styles.trendingItem}>
                 <div className={styles.itemHeader}>
                   <span className={styles.itemTitle}>
-                    {item.title || `Quiz ${index + 1}`}
+                    {item.title || item.quizName || `Quiz ${index + 1}`} {/* Adjust the field name based on your data */}
                   </span>
                   <span className={styles.impressions}>
                     {item.impressions}{' '}

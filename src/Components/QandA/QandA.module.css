@@ -46,7 +46,7 @@
 .removeButton {
   background: none;
   border: none;
-  color: #ff6b6b;
+  color: #D60000;
   cursor: pointer;
   padding: 0;
   font-size: 14px;
@@ -137,7 +137,7 @@
 .removeOptionButton {
   background: none;
   border: none;
-  color: #ff6b6b;
+  color: #D60000;
   cursor: pointer;
   padding: 0;
 }
@@ -176,9 +176,9 @@
 }
 
 .selectedTimer {
-  background-color: #ff6b6b;
+  background-color: #D60000;
   color: white;
-  border-color: #ff6b6b;
+  border-color: #D60000;
 }
 
 .footer {

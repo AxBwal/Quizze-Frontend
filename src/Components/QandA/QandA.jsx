@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { createQuiz } from '../../api/createQuiz'; // Adjust the import path as needed
 import PublishSuccess from '../PublishSuccess/PublishSuccess';
 import styles from './QandA.module.css';
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function QandA() {
   const location = useLocation();
@@ -68,6 +69,27 @@ function QandA() {
       if (!userId) {
         toast.error('User not logged in');
         return;
+      }
+
+      // Validation for mandatory fields
+      for (const question of questions) {
+        if (!question.text.trim()) {
+          toast.error(`Question ${question.id} text is required.`);
+          return;
+        }
+
+        const selectedOptions = question.options[question.selectedType];
+        if (selectedOptions.some(option => question.selectedType === 'TextImage'
+          ? !option.text.trim() || !option.image.trim()
+          : !option.value.trim())) {
+          toast.error(`All options for Question ${question.id} are required.`);
+          return;
+        }
+
+        if (question.timer === 'OFF' || question.timer === '') {
+          toast.error(`Timer for Question ${question.id} is not selected.`);
+          return;
+        }
       }
 
       const formattedQuestions = questions.map((question) => ({
@@ -374,7 +396,7 @@ function QandA() {
                             className={styles.removeOptionButton}
                             onClick={() => removeOption(question.id, index)}
                           >
-                            <FaTimes />
+                            <RiDeleteBin6Line size={"20px"} />
                           </button>
                         )}
                       </div>
