@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { createQuiz } from '../../api/createQuiz'; // Adjust the import path as needed
+import { createQuiz } from '../../api/createQuiz';
 import PublishSuccess from '../PublishSuccess/PublishSuccess';
 import styles from './QandA.module.css';
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -11,9 +11,6 @@ function QandA() {
   const location = useLocation();
   const navigate = useNavigate();
   const quizData = location.state?.item;
-
-  // Logging quizData to check if it's received properly
-  console.log("Received quizData from location:", quizData);
 
   const [questions, setQuestions] = useState(() => {
     if (quizData) {
@@ -54,24 +51,23 @@ function QandA() {
 
   const [selectedQuestion, setSelectedQuestion] = useState(1);
   const [showPublishSuccess, setShowPublishSuccess] = useState(false);
-  const [uniqueUrl, setUniqueUrl] = useState(quizData?.uniqueId || ''); // Initialize with existing uniqueId if editing
-  const isEditing = !!quizData; // Check if we are editing an existing quiz
+  const [uniqueUrl, setUniqueUrl] = useState(quizData?.uniqueId || '');
+  const isEditing = !!quizData;
 
-  // Logging the state variables for debugging
-  console.log("uniqueUrl:", uniqueUrl);
-  console.log("isEditing:", isEditing);
+  const isValidImageUrl = (url) => {
+    const imageUrlPattern = /\.(jpeg|jpg|gif|png|svg|webp)$/i;
+    return imageUrlPattern.test(url);
+  };
 
   const handleCreateOrUpdateQuiz = async () => {
     try {
       const userId = localStorage.getItem('user');
-      console.log("User ID:", userId);
 
       if (!userId) {
         toast.error('User not logged in');
         return;
       }
 
-      // Validation for mandatory fields
       for (const question of questions) {
         if (!question.text.trim()) {
           toast.error(`Question ${question.id} text is required.`);
@@ -80,14 +76,19 @@ function QandA() {
 
         const selectedOptions = question.options[question.selectedType];
         if (selectedOptions.some(option => question.selectedType === 'TextImage'
-          ? !option.text.trim() || !option.image.trim()
-          : !option.value.trim())) {
-          toast.error(`All options for Question ${question.id} are required.`);
+          ? !option.text.trim() || !isValidImageUrl(option.image)
+          : (question.selectedType === 'Image' && !isValidImageUrl(option.value)) || !option.value.trim())) {
+          toast.error(`All options for Question ${question.id} are required and must be valid.`);
           return;
         }
 
-        if (question.timer === 'OFF' || question.timer === '') {
+        if (question.timer === 'OFF') {
           toast.error(`Timer for Question ${question.id} is not selected.`);
+          return;
+        }
+
+        if (!selectedOptions.some(option => option.isCorrect)) {
+          toast.error(`A correct answer must be selected for Question ${question.id}.`);
           return;
         }
       }
@@ -102,22 +103,18 @@ function QandA() {
       const quizData = {
         userId,
         questions: formattedQuestions,
-        ...(isEditing && { uniqueId: uniqueUrl }), // Only include uniqueId if editing
+        ...(isEditing && { uniqueId: uniqueUrl }),
       };
-
-      console.log("Sending quizData to server:", quizData);
 
       const response = await createQuiz(quizData);
 
       if (response && response.uniqueUrl) {
-        console.log("Received response from server:", response);
         setUniqueUrl(response.uniqueUrl);
         setShowPublishSuccess(true);
       } else {
         throw new Error('Unique URL not generated.');
       }
     } catch (error) {
-      console.error("Error during quiz creation/updating:", error);
       toast.error(error.message || 'Failed to create or update quiz');
     }
   };
@@ -147,7 +144,7 @@ function QandA() {
           { text: '', image: '', isCorrect: false }
         ]
       };
-  
+
       setQuestions([
         ...questions,
         {
@@ -217,6 +214,11 @@ function QandA() {
   };
 
   const handleOptionValueChange = (questionId, optionIndex, value, key = 'value') => {
+    if (key === 'image' && !isValidImageUrl(value)) {
+      toast.error('Only valid image URLs are allowed.');
+      return;
+    }
+
     const updatedQuestions = questions.map((question) =>
       question.id === questionId
         ? {

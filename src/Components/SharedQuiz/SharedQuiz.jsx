@@ -13,16 +13,19 @@ function SharedQuiz() {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
+  const isValidImageUrl = (url) => {
+    const imageUrlPattern = /\.(jpeg|jpg|gif|png|svg|webp)$/i;
+    return imageUrlPattern.test(url);
+  };
+
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/quiz/${uniqueUrl}`);
         setQuizData(response.data);
 
-        // Start the timer for the first question
         startTimer(response.data.questions[0].timer);
 
-        // Increment the impressions count
         await axios.post(`http://localhost:3000/quiz/impressions`, { uniqueUrl });
 
       } catch (error) {
@@ -40,7 +43,7 @@ function SharedQuiz() {
         setTimer((prevTimer) => {
           if (prevTimer === 1) {
             clearInterval(countdown);
-            handleNext(); // Automatically move to the next question when time runs out
+            handleNext();
           }
           return prevTimer - 1;
         });
@@ -107,7 +110,13 @@ function SharedQuiz() {
             className={`${styles.quizOption} ${selectedOption === index ? styles.selected : ''}`}
             onClick={() => setSelectedOption(index)}
           >
-            {option.value || option.image}
+            {option.text && <div className={styles.optionText}>{option.text}</div>}
+            {isValidImageUrl(option.image) && (
+              <img src={option.image} alt={`Option ${index + 1}`} className={styles.quizImage} />
+            )}
+            {isValidImageUrl(option.value) && !option.text && (
+              <img src={option.value} alt={`Option ${index + 1}`} className={styles.quizImage} />
+            )}
           </div>
         ))}
       </div>
