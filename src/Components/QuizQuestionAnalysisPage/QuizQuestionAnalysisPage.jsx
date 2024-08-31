@@ -39,7 +39,7 @@ function QuizQuestionAnalysisPage() {
         <ul className={styles.navList}>
           <li onClick={() => navigate(`/dashboard/${quizData.userId}`)}>Dashboard</li>
           <li className={styles.active}>Analytics</li>
-          <li onClick={() => navigate(`/quiz/create`)}>Create Quiz</li>
+          <li onClick={() => navigate(-1)}>Create Quiz</li>
         </ul>
         <div className={styles.logoutSection}>
           <hr className={styles.divider} />
