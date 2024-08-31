@@ -20,8 +20,7 @@
 }
 
 .questionItem {
-  display: flex;
-  align-items: center;
+  position: relative;
   margin-right: 10px;
 }
 
@@ -44,13 +43,15 @@
 }
 
 .removeButton {
+  position: absolute;
+  top: -5px; /* Adjust as necessary */
+  right: -9px; /* Adjust as necessary */
   background: none;
   border: none;
   color: #D60000;
   cursor: pointer;
   padding: 0;
   font-size: 14px;
-  margin-left: 4px;
 }
 
 .addButton {
@@ -100,10 +101,10 @@
   gap: 4px;
   font-size: 14px;
 }
-
 .optionContainer {
   display: flex;
   align-items: center;
+  flex-wrap: wrap; 
   gap: 10px;
   margin-bottom: 12px;
 }
@@ -120,7 +121,7 @@
   border-radius: 8px;
 }
 .dualInput {
-  width: 50%;
+  width: calc(45% - 35px); /* Adjusted width to fit both inputs side by side */
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ddd;
