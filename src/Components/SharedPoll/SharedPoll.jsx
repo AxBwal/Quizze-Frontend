@@ -1,4 +1,3 @@
-// SharedPoll.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPoll, submitPollResponse } from '../../api/createPoll';
@@ -43,13 +42,13 @@ function SharedPoll() {
 
   const saveResponse = async () => {
     if (!pollData || !pollData.questions) return;
-  
+
     const responseData = {
       uniqueUrl,
-      questionId: pollData.questions[currentQuestion]._id, // Ensure you're using the question's correct ID
-      selectedOption: pollData.questions[currentQuestion].options[selectedOption].value, // or 'text'/'image' based on the type
+      questionId: pollData.questions[currentQuestion]._id,
+      selectedOption: pollData.questions[currentQuestion].options[selectedOption].value,
     };
-  
+
     try {
       await submitPollResponse(responseData);
       console.log('Response submitted successfully');
@@ -57,7 +56,6 @@ function SharedPoll() {
       console.error('Failed to submit poll response:', error);
     }
   };
-  
 
   if (!pollData) return <div>Loading...</div>;
 
@@ -80,7 +78,16 @@ function SharedPoll() {
             className={`${styles.pollOption} ${selectedOption === index ? styles.selected : ''}`}
             onClick={() => setSelectedOption(index)}
           >
-            {option.value || option.image}
+            {pollData.questions[currentQuestion].selectedType === 'TextImage' ? (
+              <div className={styles.textImageContainer}>
+                <span className={styles.optionText}>{option.text}</span>
+                <img src={option.image} alt={`Option ${index + 1}`} className={styles.pollImage} />
+              </div>
+            ) : option.image ? (
+              <img src={option.image} alt={`Option ${index + 1}`} className={styles.pollImage} />
+            ) : (
+              <span>{option.value || option.text}</span>
+            )}
           </div>
         ))}
       </div>
