@@ -78,15 +78,32 @@ function SharedPoll() {
             className={`${styles.pollOption} ${selectedOption === index ? styles.selected : ''}`}
             onClick={() => setSelectedOption(index)}
           >
+            {/* Render based on the question type */}
             {pollData.questions[currentQuestion].selectedType === 'TextImage' ? (
               <div className={styles.textImageContainer}>
                 <span className={styles.optionText}>{option.text}</span>
-                <img src={option.image} alt={`Option ${index + 1}`} className={styles.pollImage} />
+                <img
+                  src={option.image}
+                  alt={`Option ${index + 1}`}
+                  className={styles.pollImage}
+                  onError={(e) => {
+                    e.target.src = 'path_to_placeholder_image.png'; // Replace with actual path to placeholder image
+                    e.target.alt = 'Image not available';
+                  }}
+                />
               </div>
-            ) : option.image ? (
-              <img src={option.image} alt={`Option ${index + 1}`} className={styles.pollImage} />
+            ) : pollData.questions[currentQuestion].selectedType === 'Image' ? (
+              <img
+                src={option.value} // Corrected to use `value` since it stores the image URL
+                alt={`Option ${index + 1}`}
+                className={styles.pollImage}
+                onError={(e) => {
+                  e.target.src = 'path_to_placeholder_image.png'; // Replace with actual path to placeholder image
+                  e.target.alt = 'Image not available';
+                }}
+              />
             ) : (
-              <span>{option.value || option.text}</span>
+              <span className={styles.optionText}>{option.value}</span>
             )}
           </div>
         ))}
