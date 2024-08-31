@@ -15,7 +15,7 @@ function SharedQuiz() {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/quiz/${uniqueUrl}`);
-        console.log('Quiz data:', response.data); // Log the fetched data
+        console.log('Quiz data:', response.data);
         setQuizData(response.data);
       } catch (error) {
         console.error('Failed to load quiz:', error);
@@ -77,8 +77,17 @@ function SharedQuiz() {
             className={`${styles.quizOption} ${selectedOption === index ? styles.selected : ''}`}
             onClick={() => setSelectedOption(index)}
           >
-            {/* Render the value for text-based options */}
-            {option.value || <img src={option.image} alt={`Option ${index + 1}`} />}
+            {/* Render based on the question type */}
+            {quizData.questions[currentQuestion]?.selectedType === 'TextImage' ? (
+              <div className={styles.textImageContainer}>
+                <span className={styles.optionText}>{option.text}</span>
+                <img src={option.image} alt={`Option ${index + 1}`} className={styles.quizImage} />
+              </div>
+            ) : quizData.questions[currentQuestion]?.selectedType === 'Image' ? (
+              <img src={option.value} alt={`Option ${index + 1}`} className={styles.quizImage} />
+            ) : (
+              <span className={styles.optionText}>{option.value}</span>
+            )}
           </div>
         ))}
       </div>
