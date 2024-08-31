@@ -13,7 +13,7 @@ function PollShareModal({ uniqueUrl }) {
   };
 
   const handleClose = () => {
-    navigate(`/analytics/${userId}`); // Redirect to the dashboard with the userId
+    navigate(`/analytics/${userId}`); // Redirect to the analytics with the userId
   };
 
   return (
@@ -22,16 +22,18 @@ function PollShareModal({ uniqueUrl }) {
         <button className={styles.closeButton} onClick={handleClose}>
           &times;
         </button>
-        <h2>Congrats, your Poll is Published!</h2>
-        <input
-          type="text"
-          value={uniqueUrl}
-          readOnly
-          className={styles.linkInput}
-        />
-        <button className={styles.shareButton} onClick={handleCopyLink}>
-          Share
-        </button>
+        <div className={styles.modalss}>
+          <h2>Congrats, your Poll is Published!</h2>
+          <input
+            type="text"
+            value={uniqueUrl}
+            readOnly
+            className={styles.linkInput}
+          />
+          <button className={styles.shareButton} onClick={handleCopyLink}>
+            Share
+          </button>
+        </div>
       </div>
     </div>
   );
