@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; // Ensure useNavigate is imported
 import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
-import { createPoll, updatePoll } from '../../api/createPoll'; // Assuming you have an API function to create/update the poll
+import { createPoll, updatePoll } from '../../api/createPoll';
 import PollShareModal from '../PollShareModal/PollShareModal';
 import styles from './Poll.module.css';
 
-function Poll({ onClose }) {
+function Poll() {
   const location = useLocation();
-  const pollData = location.state?.item;  // Poll data passed from the previous page
+  const navigate = useNavigate(); // Use navigate for handling redirection
+  const pollData = location.state?.item;
 
   const [questions, setQuestions] = useState(() => {
     if (pollData) {
@@ -45,6 +46,15 @@ function Poll({ onClose }) {
       setSelectedQuestion(1);
     }
   }, [pollData]);
+
+  const handleCancel = () => {
+    const userId = localStorage.getItem('user');
+    if (userId) {
+      navigate(`/analytics/${userId}`);
+    } else {
+      toast.error('User ID not found. Cannot redirect to analytics.');
+    }
+  };
 
   const validateForm = () => {
     for (const question of questions) {
@@ -216,7 +226,7 @@ function Poll({ onClose }) {
   return (
     <div>
       {showPublishSuccess ? (
-        <PollShareModal uniqueUrl={uniqueUrl} onClose={onClose} />
+        <PollShareModal uniqueUrl={uniqueUrl} onClose={handleCancel} />
       ) : (
         <div className={styles.pollContainer}>
           <div className={styles.header}>
@@ -356,7 +366,7 @@ function Poll({ onClose }) {
           </div>
 
           <div className={styles.footer}>
-            <button className={styles.cancelButton} onClick={onClose}>
+            <button className={styles.cancelButton} onClick={handleCancel}>
               Cancel
             </button>
             <button className={styles.createQuizButton} onClick={handleUpdatePoll}>
