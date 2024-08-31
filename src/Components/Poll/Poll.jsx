@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Ensure useNavigate is imported
+import { useLocation, useNavigate } from 'react-router-dom'; 
+import { RiDeleteBin6Line } from "react-icons/ri";
 import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { createPoll, updatePoll } from '../../api/createPoll';
@@ -346,7 +347,7 @@ function Poll() {
                             className={styles.removeOptionButton}
                             onClick={() => removeOption(question.id, index)}
                           >
-                            <FaTimes />
+                            <RiDeleteBin6Line size={"20px"} />
                           </button>
                         )}
                       </div>

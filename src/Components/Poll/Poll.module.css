@@ -7,13 +7,16 @@
   margin: 20px auto;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
+
 .header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
   justify-content: space-between;
 }
+
 .questionItem {
   display: flex;
   align-items: center;
@@ -32,10 +35,24 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 .questionNumber.selected {
   background-color: #4CAF50;
   color: white;
 }
+
+.removeButton {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: none;
+  border: none;
+  color: #D60000;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+}
+
 .addButton {
   background-color: #4CAF50;
   border: none;
@@ -50,6 +67,7 @@
   font-size: 20px;
   margin-left: 10px;
 }
+
 .maxQuestionsText {
   margin-left: auto;
   font-size: 14px;
@@ -61,6 +79,7 @@
   flex-direction: column;
   margin-bottom: 20px;
 }
+
 .questionInput {
   width: 100%;
   padding: 12px;
@@ -69,6 +88,7 @@
   border-radius: 6px;
   font-size: 16px;
 }
+
 .optionTypes {
   display: flex;
   align-items: center;
@@ -85,7 +105,9 @@
   align-items: center;
   margin-bottom: 10px;
   position: relative;
+  flex-wrap: wrap; /* Ensure options wrap correctly */
 }
+
 .optionInput,
 .dualInput {
   flex-grow: 1;
@@ -148,6 +170,7 @@
 .createQuizButton:hover {
   background-color: #45a049;
 }
+
 .correctOption input {
   border-color: #4caf50;
   background-color: #e8f5e9;
