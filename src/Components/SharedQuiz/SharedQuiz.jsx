@@ -10,13 +10,16 @@ function SharedQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/quiz/${uniqueUrl}`);
-        console.log('Quiz data:', response.data);
         setQuizData(response.data);
+        const initialTime = response.data.questions[0].timer !== "OFF" ? parseInt(response.data.questions[0].timer, 10) : null;
+        setTimeLeft(initialTime);
       } catch (error) {
         console.error('Failed to load quiz:', error);
       }
@@ -25,35 +28,71 @@ function SharedQuiz() {
     fetchQuizData();
   }, [uniqueUrl]);
 
+  useEffect(() => {
+    if (timeLeft !== null) {
+      if (timeLeft === 0) {
+        handleNext();
+      } else {
+        const timer = setTimeout(() => {
+          setTimeLeft(timeLeft - 1);
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [timeLeft]);
+
   const handleNext = () => {
     if (!quizData || !quizData.questions) return;
 
     if (selectedOption !== null) {
-      saveResponse();
+      const isCorrect = quizData.questions[currentQuestion].options[selectedOption].isCorrect;
+      saveResponse(isCorrect);
+
+      if (isCorrect) {
+        setCorrectAnswers(prevCount => {
+          const newCount = prevCount + 1;
+          console.log(`Correct answer selected! New correct answer count: ${newCount}`);
+          return newCount;
+        });
+      }
     }
+
     if (currentQuestion + 1 < quizData.questions.length) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedOption(null);
+      const nextTime = quizData.questions[currentQuestion + 1].timer !== "OFF" ? parseInt(quizData.questions[currentQuestion + 1].timer, 10) : null;
+      setTimeLeft(nextTime);
     } else {
       setQuizCompleted(true);
     }
   };
 
-  const saveResponse = async () => {
+  const saveResponse = async (isCorrect) => {
     if (!quizData || !quizData.questions) return;
 
     const responseData = {
       uniqueUrl,
       questionId: quizData.questions[currentQuestion]._id,
-      selectedOption: quizData.questions[currentQuestion].options[selectedOption].value,
+      isCorrect: isCorrect,
     };
 
     try {
-      await axios.post('http://localhost:3000/quiz/response', responseData);
-      console.log('Response submitted successfully');
+      const response = await axios.post('http://localhost:3000/quiz/response', responseData);
+      if (response.status === 200) {
+        console.log('Response successfully submitted');
+      } else {
+        console.error('Failed to submit quiz response:', response.data);
+      }
     } catch (error) {
       console.error('Failed to submit quiz response:', error);
     }
+  };
+
+  const formatTime = (seconds) => {
+    if (seconds === null || seconds === undefined) return '';
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
   if (!quizData) return <div>Loading...</div>;
@@ -66,6 +105,7 @@ function SharedQuiz() {
     <div className={styles.quizContainer}>
       <div className={styles.quizHeader}>
         <span>{`0${currentQuestion + 1}/0${quizData.questions.length}`}</span>
+        {timeLeft !== null && <span>{formatTime(timeLeft)}</span>}
       </div>
       <div className={styles.quizQuestion}>
         {quizData.questions[currentQuestion]?.text}
@@ -77,7 +117,6 @@ function SharedQuiz() {
             className={`${styles.quizOption} ${selectedOption === index ? styles.selected : ''}`}
             onClick={() => setSelectedOption(index)}
           >
-            {/* Render based on the question type */}
             {quizData.questions[currentQuestion]?.selectedType === 'TextImage' ? (
               <div className={styles.textImageContainer}>
                 <span className={styles.optionText}>{option.text}</span>
