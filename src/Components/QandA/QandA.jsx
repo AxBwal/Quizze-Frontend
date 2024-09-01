@@ -61,71 +61,92 @@ function QandA() {
 
   const handleCreateOrUpdateQuiz = async () => {
     try {
-        const userId = localStorage.getItem('user');
+      const userId = localStorage.getItem('user');
 
-        if (!userId) {
-            toast.error('User not logged in');
-            return;
+      if (!userId) {
+        toast.error('User is not logged in. Please log in to continue.');
+        return;
+      }
+
+      for (const question of questions) {
+        if (!question.text.trim()) {
+          toast.error(`Question ${question.id}: The question text cannot be empty.`);
+          return;
         }
 
-        for (const question of questions) {
-            if (!question.text.trim()) {
-                toast.error(`Question ${question.id} text is required.`);
-                return;
-            }
+        const selectedOptions = question.options[question.selectedType];
+        const isTextImage = question.selectedType === 'TextImage';
+        const hasInvalidOptions = selectedOptions.some(option => {
+          if (isTextImage) {
+            return !option.text.trim() || !isValidImageUrl(option.image);
+          } else if (question.selectedType === 'Image') {
+            return !isValidImageUrl(option.value);
+          } else {
+            return !option.value.trim();
+          }
+        });
 
-            const selectedOptions = question.options[question.selectedType];
-            if (selectedOptions.some(option => question.selectedType === 'TextImage'
-                ? !option.text.trim() || !isValidImageUrl(option.image)
-                : (question.selectedType === 'Image' && !isValidImageUrl(option.value)) || !option.value.trim())) {
-                toast.error(`All options for Question ${question.id} are required and must be valid.`);
-                return;
-            }
-
-            if (!selectedOptions.some(option => option.isCorrect)) {
-                toast.error(`A correct answer must be selected for Question ${question.id}.`);
-                return;
-            }
+        if (hasInvalidOptions) {
+          toast.error(`Question ${question.id}: All options must be filled and valid.`);
+          return;
         }
 
-        const formattedQuestions = questions.map((question) => ({
-            text: question.text,
-            selectedType: question.selectedType,
-            timer: question.timer,
-            options: question.options[question.selectedType],
-        }));
+        if (!selectedOptions.some(option => option.isCorrect)) {
+          toast.error(`Question ${question.id}: You must select a correct answer.`);
+          return;
+        }
+      }
 
-        const quizData = {
-            userId,
-            questions: formattedQuestions,
-            ...(isEditing && { uniqueId: uniqueUrl }),
-        };
+      const formattedQuestions = questions.map((question) => ({
+        text: question.text,
+        selectedType: question.selectedType,
+        timer: question.timer,
+        options: question.options[question.selectedType].map(option => {
+          if (question.selectedType === 'TextImage') {
+            return {
+              text: option.text,
+              image: option.image,
+              isCorrect: option.isCorrect
+            };
+          } else {
+            return {
+              value: option.value,
+              isCorrect: option.isCorrect
+            };
+          }
+        })
+      }));
 
-        const response = await createQuiz(quizData);
+      const quizData = {
+        userId,
+        questions: formattedQuestions,
+        ...(isEditing && { uniqueId: uniqueUrl }),
+      };
 
-        if (response && response.uniqueUrl) {
-            if (isEditing) {
-                toast.success("Edited successfully");
-                navigate(`/analytics/${userId}`);
-            } else {
-                setUniqueUrl(response.uniqueUrl);
-                setShowPublishSuccess(true);
-            }
+      const response = await createQuiz(quizData);
+
+      if (response && response.uniqueUrl) {
+        if (isEditing) {
+          toast.success("Quiz updated successfully!");
+          navigate(`/analytics/${userId}`);
         } else {
-            throw new Error('Unique URL not generated.');
+          setUniqueUrl(response.uniqueUrl);
+          setShowPublishSuccess(true);
         }
+      } else {
+        throw new Error('Failed to generate a unique URL.');
+      }
     } catch (error) {
-        toast.error(error.message || 'Failed to create or update quiz');
+      toast.error(error.message || 'An error occurred while creating or updating the quiz.');
     }
-};
-
+  };
 
   const handleCancel = () => {
     const userId = localStorage.getItem('user');
     if (userId) {
       navigate(`/analytics/${userId}`);
     } else {
-      toast.error('User ID not found. Cannot redirect to analytics.');
+      toast.error('User ID not found. Unable to redirect to analytics.');
     }
   };
 
@@ -158,7 +179,7 @@ function QandA() {
       ]);
       setSelectedQuestion(questions.length + 1);
     } else {
-      toast.error('Maximum question limit reached or editing mode is on.');
+      toast.error('You cannot add more questions or edit in this mode.');
     }
   };
 
@@ -222,7 +243,7 @@ function QandA() {
 
   const handleOptionValueChange = (questionId, optionIndex, value, key = 'value') => {
     if (key === 'image' && !isValidImageUrl(value)) {
-      toast.error('Only valid image URLs are allowed.');
+      toast.error('Please enter a valid image URL.');
       return;
     }
 

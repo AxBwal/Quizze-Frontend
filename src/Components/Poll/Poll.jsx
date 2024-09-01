@@ -12,6 +12,8 @@ function Poll() {
   const navigate = useNavigate(); 
   const pollData = location.state?.item;
 
+  const imageUrlPattern = /\.(jpeg|jpg|gif|png|svg|webp)$/i;
+
   const [questions, setQuestions] = useState(() => {
     if (pollData) {
       return pollData.questions.map((q, index) => ({
@@ -65,8 +67,13 @@ function Poll() {
       }
       for (const option of question.options[question.selectedType]) {
         if (question.selectedType === 'TextImage') {
-          if (!option.text.trim() || !option.image.trim()) {
-            toast.error(`Option in Question ${question.id} is not filled. Please fill all options.`);
+          if (!option.text.trim() || !option.image.trim() || !imageUrlPattern.test(option.image)) {
+            toast.error(`Invalid input in Question ${question.id}. Ensure all fields are filled with valid data.`);
+            return false;
+          }
+        } else if (question.selectedType === 'Image') {
+          if (!option.value.trim() || !imageUrlPattern.test(option.value)) {
+            toast.error(`Invalid image URL in Question ${question.id}. Please provide a valid image URL.`);
             return false;
           }
         } else {
@@ -162,6 +169,13 @@ function Poll() {
   };
 
   const handleOptionValueChange = (questionId, optionIndex, value, key = 'value') => {
+    if (questions[selectedQuestion - 1].selectedType === 'Image' || (questions[selectedQuestion - 1].selectedType === 'TextImage' && key === 'image')) {
+      if (!imageUrlPattern.test(value)) {
+        toast.error('Invalid image URL. Please enter a valid image URL (jpeg, jpg, gif, png, svg, webp).');
+        return;
+      }
+    }
+
     const updatedQuestions = questions.map((question) =>
       question.id === questionId
         ? {
