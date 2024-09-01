@@ -2,18 +2,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 10px 20px; /* Reduced padding to minimize vertical space */
   background-color: #f9f9f9;
   max-width: 600px;
   margin: 0 auto;
   margin-top: 50px;
+  max-height: 80vh; /* Constrain modal height to 80% of viewport height */
+  overflow-y: auto; /* Add vertical scroll only if content exceeds 80% of viewport */
 }
 
 .pollHeader {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 18px;
   font-weight: bold;
 }
@@ -22,13 +24,13 @@
   font-size: 18px;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .pollOptions {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 10px; /* Reduced gap between options */
   width: 100%;
 }
 
@@ -36,7 +38,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px;
+  padding: 10px; /* Reduced padding */
   background-color: #f1f1f1;
   border-radius: 8px;
   cursor: pointer;
@@ -44,22 +46,23 @@
   font-weight: 500;
   text-align: center;
   transition: border 0.3s ease, background-color 0.3s ease;
-  height: 60px;
+  height: 120px; /* Adjusted height to fit better within the modal */
   box-sizing: border-box;
+  border: 2px solid transparent;
+  overflow: hidden;
 }
 
 .pollOption:hover {
   background-color: #e0e0e0;
-  border: 2px solid #007bff;
 }
 
 .selected {
-  background-color: #007bff;
-  color: white;
+  border: 2px solid #007bff;
+  background-color: #f1f1f1;
 }
 
 .pollNextButton {
-  margin-top: 20px;
+  margin-top: 10px; /* Reduced margin-top to bring the button closer to options */
   padding: 10px 20px;
   background-color: #28a745;
   color: white;
@@ -69,6 +72,7 @@
   font-size: 16px;
   font-weight: bold;
   text-transform: uppercase;
+  align-self: center;
 }
 
 .pollNextButton:hover {
@@ -80,6 +84,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 100%;
 }
 
 .optionText {
@@ -89,17 +94,16 @@
 }
 
 .pollImage {
-  width: 50%;
-  height: auto;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 4px;
-  max-height: 150px;
 }
 
 @media (max-width: 768px) {
   .pollOptions {
       grid-template-columns: 1fr;
-      gap: 15px;
+      gap: 10px;
   }
 
   .textImageContainer {
