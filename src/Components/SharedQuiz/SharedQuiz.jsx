@@ -41,6 +41,13 @@ function SharedQuiz() {
     }
   }, [timeLeft]);
 
+  const getTimerClass = () => {
+    if (timeLeft !== null && timeLeft <= 10) { // Change the threshold as needed
+      return styles.timerRed;
+    }
+    return '';
+  };
+
   const handleNext = () => {
     if (!quizData || !quizData.questions) return;
 
@@ -106,7 +113,7 @@ function SharedQuiz() {
       <div className={styles.quizHeader}>
         <span>{`0${currentQuestion + 1}/0${quizData.questions.length}`}</span>
         {timeLeft !== null && (
-          <span className={timeLeft === 0 ? styles.timerRed : ''}>
+          <span className={getTimerClass()}>
             {formatTime(timeLeft)}
           </span>
         )}

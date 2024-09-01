@@ -24,15 +24,21 @@ function Dashboard({ handleLogout }) {
         });
 
         const items = response.data;
+
+        // Add a quizNumber property to each item based on its index in the original array
+        items.forEach((item, index) => {
+          item.quizNumber = `Quiz ${index + 1}`;
+        });
+
         const totalImpressions = items.reduce((acc, item) => acc + (item.impressions || 0), 0);
         const quizzesCreated = items.length;
         const questionsCreated = items.reduce((acc, item) => acc + (item.questions ? item.questions.length : 0), 0);
 
         setTotalImpressions(totalImpressions);
         setQuizzesCreated(quizzesCreated);
-        setQuestionsCreated(questionsCreated); // Set the questions created count
+        setQuestionsCreated(questionsCreated);
 
-        // Filter and sort items for trending section
+        // Filter and sort trending items by impressions
         const filteredItems = items.filter(item => item.impressions >= 10);
         const sortedTrendingItems = filteredItems.sort((a, b) => b.impressions - a.impressions);
         setTrendingItems(sortedTrendingItems);
@@ -118,24 +124,26 @@ function Dashboard({ handleLogout }) {
           <p>No trending quizzes or polls to show.</p>
         ) : (
           <div className={styles.trendingItemsContainer}>
-            {trendingItems.map((item, index) => (
+            {trendingItems.map((item) => (
               <div key={item._id} className={styles.trendingItem}>
                 <div className={styles.itemHeader}>
                   <span className={styles.itemTitle}>
-                    {item.title || item.quizName || `Quiz ${index + 1}`} {/* Adjust the field name based on your data */}
+                    {item.quizNumber} {/* Display the original quiz number */}
                   </span>
                   <span className={styles.impressions}>
-                    {item.impressions}{' '}
+                    {item.impressions ? item.impressions : 0}{' '}
                     <LuEye size={20} color="#FF5D01" />
                   </span>
                 </div>
                 <span className={styles.itemDate}>
                   Created on:{' '}
-                  {new Date(item.createdAt).toLocaleDateString('en-GB', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
+                  {item.createdAt
+                    ? new Date(item.createdAt).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    : 'Unknown Date'}
                 </span>
               </div>
             ))}
