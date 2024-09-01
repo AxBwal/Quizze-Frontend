@@ -265,10 +265,12 @@ function QandA() {
   };
 
   const handleTimerChange = (questionId, timerValue) => {
-    const updatedQuestions = questions.map((question) =>
-      question.id === questionId ? { ...question, timer: timerValue } : question
+    console.log(`Setting timer for question ${questionId} to ${timerValue}`);
+    setQuestions(prevQuestions =>
+        prevQuestions.map(question =>
+            question.id === questionId ? { ...question, timer: timerValue } : question
+        )
     );
-    setQuestions(updatedQuestions);
   };
 
   return (
