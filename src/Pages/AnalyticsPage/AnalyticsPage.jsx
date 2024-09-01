@@ -122,7 +122,6 @@ function AnalyticsPage() {
       });
     }
   };
-  
 
   const openCreateQuizPopup = () => {
     setShowCreateQuizPopup(true);
@@ -130,6 +129,13 @@ function AnalyticsPage() {
 
   const closeCreateQuizPopup = () => {
     setShowCreateQuizPopup(false);
+  };
+
+  const formatImpressions = (number) => {
+    if (number >= 1000) {
+      return (number / 1000).toFixed(1) + "k";
+    }
+    return number;
   };
 
   if (loading) {
@@ -177,7 +183,7 @@ function AnalyticsPage() {
                   <td>{index + 1}</td>
                   <td>{`Quiz ${index + 1}`}</td>
                   <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                  <td>{item.impressions || 0}</td> 
+                  <td>{formatImpressions(item.impressions || 0)}</td> 
                   <td className={styles.actionsColumn}>
                     <button onClick={() => handleEditItem(item)}><FaRegEdit color="#854CFF" size={"20px"} /></button>
                     <button onClick={() => handleDeleteItem(item._id, item.type)}><RiDeleteBin6Line color="#D60000" size={"20px"}  /></button>
@@ -192,7 +198,7 @@ function AnalyticsPage() {
 
         {showDeletePopup && (
           <ConfirmationPopup
-            message="Are you confirm you want to delete ?"
+            message="Are you sure you want to delete?"
             onConfirm={confirmDeleteItem}
             onCancel={() => setShowDeletePopup(false)}
           />
