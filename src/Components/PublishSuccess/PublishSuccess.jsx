@@ -17,11 +17,11 @@ function PublishSuccess({ uniqueUrl }) {
   };
 
   const handleClose = () => {
-    console.log('Close button clicked');
-    if (userId) {
-      navigate(`/analytics/${userId}`, { state: location.state }); // Pass along any relevant state
+    const currentUrl = window.location.pathname; // Get the current URL path
+    if (currentUrl === `/dashboard/${userId}`) {
+      navigate(`/analytics/${userId}`);
     } else {
-      console.error('User ID is missing, cannot navigate');
+      navigate(`/dashboard/${userId}`);
     }
   };
 

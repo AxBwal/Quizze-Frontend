@@ -16,22 +16,16 @@ function PollShareModal({ uniqueUrl, onClose }) { // Added onClose prop
     toast.success('Link copied to clipboard!');
   };
 
+
   const handleClose = () => {
-    console.log("Close button clicked");
-    
-    // First, close the modal
-    onClose(); // Immediately close the modal
-    
-    // Then navigate to the analytics page
-    if (userId) {
-      console.log("Navigating to analytics page with userId:", userId);
-      navigate(`/analytics/${userId}`); // Redirect to the analytics page with the userId
+    const currentUrl = window.location.pathname; // Get the current URL path
+    if (currentUrl === `/dashboard/${userId}`) {
+      navigate(`/analytics/${userId}`);
     } else {
-      console.error('User ID not found. Cannot redirect to analytics.');
-      toast.error('User ID not found. Cannot redirect to analytics.');
-      navigate(`/signin`); // Fallback to sign in if userId is not found
+      navigate(`/dashboard/${userId}`);
     }
   };
+
 
   return (
     <div className={styles.modalOverlay}>
