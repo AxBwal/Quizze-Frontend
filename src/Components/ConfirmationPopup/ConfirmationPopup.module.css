@@ -10,7 +10,9 @@
     align-items: center;
     z-index: 1000;
   }
-  
+  .heading{
+    font-size: 20px;
+  }
   .popupContent {
     background-color: white;
     padding: 20px;
@@ -34,11 +36,12 @@
   }
   
   .cancelButton {
-    background-color: lightgray;
+    background-color: #FFFFFF;
     color: black;
-    border: none;
+    border: 1px solid whitesmoke;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
   }
   

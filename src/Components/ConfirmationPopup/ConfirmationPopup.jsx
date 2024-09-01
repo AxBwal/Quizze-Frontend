@@ -5,7 +5,7 @@ function ConfirmationPopup({ message, onConfirm, onCancel }) {
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popupContent}>
-        <p>{message}</p>
+        <p className={styles.heading}>{message}</p>
         <div className={styles.popupActions}>
           <button className={styles.confirmButton} onClick={onConfirm}>Confirm Delete</button>
           <button className={styles.cancelButton} onClick={onCancel}>Cancel</button>
