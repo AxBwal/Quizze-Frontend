@@ -91,7 +91,7 @@ function Signup() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className={errors.username ? styles.errorInput : ''}
+              className={`${errors.username ? styles.errorInput : ''}`}
               placeholder={errors.username || 'Enter your name'}
             />
           </div>
@@ -103,7 +103,7 @@ function Signup() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={errors.email ? styles.errorInput : ''}
+              className={`${errors.email ? styles.errorInput : ''}`}
               placeholder={errors.email || 'Enter your email'}
             />
           </div>
@@ -115,7 +115,7 @@ function Signup() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={errors.password ? styles.errorInput : ''}
+              className={`${errors.password ? styles.errorInput : ''}`}
               placeholder={errors.password || '***********'}
             />
           </div>
@@ -127,7 +127,7 @@ function Signup() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className={errors.confirmPassword ? styles.errorInput : ''}
+              className={`${errors.confirmPassword ? styles.errorInput : ''}`}
               placeholder={errors.confirmPassword || '***********'}
             />
           </div>

@@ -88,8 +88,9 @@
 }
 
 .errorInput {
-  border-color: red;
-  color: red;
+  border: 1px solid red !important; 
+  color: red; 
+  background-color: #ffe6e6; 
 }
 
 .inputGroupError input::placeholder {
