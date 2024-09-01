@@ -184,45 +184,45 @@ function Poll() {
     if (!validateForm()) return;
 
     try {
-      const userId = localStorage.getItem('user');
-      if (!userId) {
-        toast.error('User not logged in');
-        return;
-      }
-  
-      const formattedQuestions = questions.map((question) => ({
-        text: question.text,
-        selectedType: question.selectedType,
-        options: question.options[question.selectedType],
-      }));
-  
-      const pollPayload = {
-        userId,
-        questions: formattedQuestions,
-      };
-  
-      let response;
-      if (pollData && pollData._id) {
-        // Update the existing poll
-        response = await updatePoll(pollData._id, pollPayload);
-      } else {
-        // Create a new poll
-        response = await createPoll(pollPayload);
-      }
-  
-      if (response) {
-        const url = response.uniqueUrl ? `${window.location.origin}/poll/${response.uniqueUrl}` : uniqueUrl;
-        setUniqueUrl(url);
-        setShowPublishSuccess(true);
-        toast.success(`Poll ${pollData ? 'updated' : 'created'} successfully`);
-      } else {
-        throw new Error('Unexpected error: Missing unique URL in response.');
-      }
+        const userId = localStorage.getItem('user');
+        if (!userId) {
+            toast.error('User not logged in');
+            return;
+        }
+
+        const formattedQuestions = questions.map((question) => ({
+            text: question.text,
+            selectedType: question.selectedType,
+            options: question.options[question.selectedType],
+        }));
+
+        const pollPayload = {
+            userId,
+            questions: formattedQuestions,
+        };
+
+        let response;
+        if (pollData && pollData._id) {
+            // Update the existing poll
+            response = await updatePoll(pollData._id, pollPayload);
+            toast.success("Edited successfully");
+            navigate(`/analytics/${userId}`);
+        } else {
+            // Create a new poll
+            response = await createPoll(pollPayload);
+            if (response) {
+                const url = response.uniqueUrl ? `${window.location.origin}/poll/${response.uniqueUrl}` : uniqueUrl;
+                setUniqueUrl(url);
+                setShowPublishSuccess(true);
+            } else {
+                throw new Error('Unexpected error: Missing unique URL in response.');
+            }
+        }
     } catch (error) {
-      console.error('Error in handleUpdatePoll:', error.message);
-      toast.error(error.message || 'Failed to update the poll');
+        toast.error(error.message || 'Failed to update the poll');
     }
-  };
+};
+
 
   return (
     <div>

@@ -61,62 +61,64 @@ function QandA() {
 
   const handleCreateOrUpdateQuiz = async () => {
     try {
-      const userId = localStorage.getItem('user');
-  
-      if (!userId) {
-        toast.error('User not logged in');
-        return;
-      }
-  
-      for (const question of questions) {
-        if (!question.text.trim()) {
-          toast.error(`Question ${question.id} text is required.`);
-          return;
+        const userId = localStorage.getItem('user');
+
+        if (!userId) {
+            toast.error('User not logged in');
+            return;
         }
-  
-        const selectedOptions = question.options[question.selectedType];
-        if (selectedOptions.some(option => question.selectedType === 'TextImage'
-          ? !option.text.trim() || !isValidImageUrl(option.image)
-          : (question.selectedType === 'Image' && !isValidImageUrl(option.value)) || !option.value.trim())) {
-          toast.error(`All options for Question ${question.id} are required and must be valid.`);
-          return;
+
+        for (const question of questions) {
+            if (!question.text.trim()) {
+                toast.error(`Question ${question.id} text is required.`);
+                return;
+            }
+
+            const selectedOptions = question.options[question.selectedType];
+            if (selectedOptions.some(option => question.selectedType === 'TextImage'
+                ? !option.text.trim() || !isValidImageUrl(option.image)
+                : (question.selectedType === 'Image' && !isValidImageUrl(option.value)) || !option.value.trim())) {
+                toast.error(`All options for Question ${question.id} are required and must be valid.`);
+                return;
+            }
+
+            if (!selectedOptions.some(option => option.isCorrect)) {
+                toast.error(`A correct answer must be selected for Question ${question.id}.`);
+                return;
+            }
         }
-  
-        if (!selectedOptions.some(option => option.isCorrect)) {
-          toast.error(`A correct answer must be selected for Question ${question.id}.`);
-          return;
+
+        const formattedQuestions = questions.map((question) => ({
+            text: question.text,
+            selectedType: question.selectedType,
+            timer: question.timer,
+            options: question.options[question.selectedType],
+        }));
+
+        const quizData = {
+            userId,
+            questions: formattedQuestions,
+            ...(isEditing && { uniqueId: uniqueUrl }),
+        };
+
+        const response = await createQuiz(quizData);
+
+        if (response && response.uniqueUrl) {
+            if (isEditing) {
+                toast.success("Edited successfully");
+                navigate(`/analytics/${userId}`);
+            } else {
+                setUniqueUrl(response.uniqueUrl);
+                setShowPublishSuccess(true);
+            }
+        } else {
+            throw new Error('Unique URL not generated.');
         }
-      }
-  
-      const formattedQuestions = questions.map((question) => ({
-        text: question.text,
-        selectedType: question.selectedType,
-        timer: question.timer,
-        options: question.options[question.selectedType],
-      }));
-  
-      const quizData = {
-        userId,
-        questions: formattedQuestions,
-        ...(isEditing && { uniqueId: uniqueUrl }),
-      };
-  
-      // Log the quiz data before sending it to the backend
-      console.log('Sending quiz data to backend:', quizData);
-  
-      const response = await createQuiz(quizData);
-  
-      if (response && response.uniqueUrl) {
-        setUniqueUrl(response.uniqueUrl);
-        setShowPublishSuccess(true);
-      } else {
-        throw new Error('Unique URL not generated.');
-      }
     } catch (error) {
-      console.log('Error in creating/updating quiz:', error);
-      toast.error(error.message || 'Failed to create or update quiz');
+        toast.error(error.message || 'Failed to create or update quiz');
     }
-  };
+};
+
 
   const handleCancel = () => {
     const userId = localStorage.getItem('user');
