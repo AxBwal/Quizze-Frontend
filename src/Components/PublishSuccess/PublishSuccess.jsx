@@ -9,7 +9,7 @@ function PublishSuccess({ uniqueUrl }) {
   const location = useLocation();
   const userId = localStorage.getItem('user'); // Retrieve the userId from localStorage
 
-  const quizLink = `http://localhost:5173/sharedquiz/${uniqueUrl}`;
+  const quizLink = `https://quizze-frontend-anshumana.vercel.app/sharedquiz/${uniqueUrl}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(quizLink);
