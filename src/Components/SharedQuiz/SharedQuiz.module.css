@@ -18,8 +18,8 @@
   padding: 10px;
 }
 
-.quizTimer {
-  color: red;
+.timerRed {
+  color: #D60000;
   font-weight: bold;
 }
 
@@ -39,7 +39,7 @@
 .quizOption {
   flex: 1 1 45%;
   max-width: 45%;
-  padding: 10px; /* Reduced padding */
+  padding: 10px;
   margin: 5px;
   background-color: #f1f1f1;
   border: 2px solid transparent;
@@ -54,13 +54,13 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  min-height: 150px; /* Reduced min-height for better spacing */
+  min-height: 150px;
 }
 
 .optionText {
   font-size: 16px;
   color: #333;
-  margin-right: 10px; /* Add some spacing between text and image */
+  margin-right: 10px;
 }
 
 .quizImage {
@@ -68,7 +68,7 @@
   height: auto;
   object-fit: contain;
   border-radius: 4px;
-  max-height: 100px; /* Reduced max-height for the image */
+  max-height: 100px;
 }
 
 .selected {
@@ -93,7 +93,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%; /* Ensure the container takes the full width */
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -110,7 +110,7 @@
   .quizOption {
     flex: 1 1 100%;
     margin: 10px 0;
-    max-width: 100%; /* Make each option take the full width on smaller screens */
+    max-width: 100%;
   }
 
   .quizHeader {

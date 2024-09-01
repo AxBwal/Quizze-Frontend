@@ -105,7 +105,11 @@ function SharedQuiz() {
     <div className={styles.quizContainer}>
       <div className={styles.quizHeader}>
         <span>{`0${currentQuestion + 1}/0${quizData.questions.length}`}</span>
-        {timeLeft !== null && <span>{formatTime(timeLeft)}</span>}
+        {timeLeft !== null && (
+          <span className={timeLeft === 0 ? styles.timerRed : ''}>
+            {formatTime(timeLeft)}
+          </span>
+        )}
       </div>
       <div className={styles.quizQuestion}>
         {quizData.questions[currentQuestion]?.text}
