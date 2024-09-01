@@ -113,14 +113,13 @@
   background-color: #B3C4FF;
 }
 
-
-
-.analyticsTable td .actionsColumn {
+ .actionsColumn{
   display: flex;
-  justify-content: flex-start; /* Align icons to the left */
+  margin-left: -15px;
+  gap: 10px;
   align-items: center;
-  gap: 15px; 
-}
+  justify-content: center;
+ }
 
 .analyticsTable td button,
 .analyticsTable td a {

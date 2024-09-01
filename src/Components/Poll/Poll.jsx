@@ -9,7 +9,7 @@ import styles from './Poll.module.css';
 
 function Poll() {
   const location = useLocation();
-  const navigate = useNavigate(); // Use navigate for handling redirection
+  const navigate = useNavigate(); 
   const pollData = location.state?.item;
 
   const [questions, setQuestions] = useState(() => {
@@ -203,12 +203,10 @@ function Poll() {
 
         let response;
         if (pollData && pollData._id) {
-            // Update the existing poll
             response = await updatePoll(pollData._id, pollPayload);
             toast.success("Edited successfully");
             navigate(`/analytics/${userId}`);
         } else {
-            // Create a new poll
             response = await createPoll(pollPayload);
             if (response) {
                 const url = response.uniqueUrl ? `${window.location.origin}/poll/${response.uniqueUrl}` : uniqueUrl;
@@ -221,8 +219,7 @@ function Poll() {
     } catch (error) {
         toast.error(error.message || 'Failed to update the poll');
     }
-};
-
+  };
 
   return (
     <div>

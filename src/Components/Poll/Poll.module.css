@@ -3,8 +3,8 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  max-width: 800px;
-  margin: 20px auto;
+  max-width: 600px; /* Ensure the container has a fixed width */
+  margin: 50px auto; /* Center the modal with margin from the top */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -81,7 +81,8 @@
 }
 
 .questionInput {
-  width: 100%;
+  width: 100%; /* Ensure the input box takes the full width of the container */
+  box-sizing: border-box; /* Include padding and border in the element's width */
   padding: 12px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
@@ -145,30 +146,26 @@
 
 .footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between; /* Align buttons like on the Quiz page */
   margin-top: 20px;
 }
 
-.footer button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
+.cancelButton {
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  color: black;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  margin-left: 10px;
-}
-
-.footer button:hover {
-  opacity: 0.9;
 }
 
 .createQuizButton {
-  background-color: #4CAF50;
+  padding: 10px 20px;
+  background-color: #4caf50;
   color: white;
-}
-
-.createQuizButton:hover {
-  background-color: #45a049;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .correctOption input {

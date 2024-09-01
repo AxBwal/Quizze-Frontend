@@ -177,12 +177,12 @@ function AnalyticsPage() {
                   <td>{index + 1}</td>
                   <td>{`Quiz ${index + 1}`}</td>
                   <td>{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                  <td>{item.impressions || 0}</td> {/* Displaying the impressions value */}
+                  <td>{item.impressions || 0}</td> 
                   <td className={styles.actionsColumn}>
                     <button onClick={() => handleEditItem(item)}><FaRegEdit color="#854CFF" size={"20px"} /></button>
                     <button onClick={() => handleDeleteItem(item._id, item.type)}><RiDeleteBin6Line color="#D60000" size={"20px"}  /></button>
                     <button onClick={() => handleShareItem(item)}><IoShareSocialSharp color="#60B84B" size={"20px"}   /></button>
-                    <button onClick={() => handleQuestionWiseAnalysis(item)}>Question Wise Analysis</button>
+                    <button style={{textDecoration:"underline"}} onClick={() => handleQuestionWiseAnalysis(item)}>Question Wise Analysis</button>
                   </td>
                 </tr>
               ))}
