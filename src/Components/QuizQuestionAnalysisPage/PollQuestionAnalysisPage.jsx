@@ -13,7 +13,7 @@ function PollQuestionAnalysisPage() {
   useEffect(() => {
     const fetchPollData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/poll/id/${pollId}`, {
+        const response = await axios.get(`https://quizze-backend-anshumanakhilnew.vercel.app/poll/id/${pollId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

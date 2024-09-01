@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BACKEND_ORIGIN_URL = 'http://localhost:3000';
+const BACKEND_ORIGIN_URL = 'https://quizze-backend-anshumanakhilnew.vercel.app';
 
 // API to create a poll
 export const createPoll = async (pollData) => {

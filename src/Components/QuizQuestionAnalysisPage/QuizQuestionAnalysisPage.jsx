@@ -13,7 +13,7 @@ function QuizQuestionAnalysisPage() {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/quiz/id/${quizId}`, {
+        const response = await axios.get(`https://quizze-backend-anshumanakhilnew.vercel.app/quiz/id/${quizId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

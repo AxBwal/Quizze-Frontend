@@ -23,7 +23,7 @@ function AnalyticsPage() {
     const fetchItems = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`http://localhost:3000/quiz/analytics/${userId}`, {
+        const response = await axios.get(`https://quizze-backend-anshumanakhilnew.vercel.app/quiz/analytics/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -42,7 +42,7 @@ function AnalyticsPage() {
   const handleShareItem = async (item) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/${item.type === "poll" ? "poll" : "quiz"}/id/${item._id}`,
+        `https://quizze-backend-anshumanakhilnew.vercel.app/${item.type === "poll" ? "poll" : "quiz"}/id/${item._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -77,7 +77,7 @@ function AnalyticsPage() {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3000/${itemToDelete.type}/delete/${itemToDelete.id}`,
+        `https://quizze-backend-anshumanakhilnew.vercel.app/${itemToDelete.type}/delete/${itemToDelete.id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

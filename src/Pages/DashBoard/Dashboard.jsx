@@ -19,7 +19,7 @@ function Dashboard({ handleLogout }) {
     const fetchAnalyticsData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:3000/quiz/analytics/${localStorage.getItem('user')}`, {
+        const response = await axios.get(`https://quizze-backend-anshumanakhilnew.vercel.app/quiz/analytics/${localStorage.getItem('user')}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

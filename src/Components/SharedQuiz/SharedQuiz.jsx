@@ -16,7 +16,7 @@ function SharedQuiz() {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/quiz/${uniqueUrl}`);
+        const response = await axios.get(`https://quizze-backend-anshumanakhilnew.vercel.app/quiz/${uniqueUrl}`);
         setQuizData(response.data);
         const initialTime = response.data.questions[0].timer !== "OFF" ? parseInt(response.data.questions[0].timer, 10) : null;
         setTimeLeft(initialTime);
@@ -77,7 +77,7 @@ function SharedQuiz() {
     };
 
     try {
-      const response = await axios.post('http://localhost:3000/quiz/response', responseData);
+      const response = await axios.post('https://quizze-backend-anshumanakhilnew.vercel.app/quiz/response', responseData);
       if (response.status === 200) {
         console.log('Response successfully submitted');
       } else {
