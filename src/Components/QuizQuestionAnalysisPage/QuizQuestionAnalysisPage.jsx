@@ -53,7 +53,11 @@ function QuizQuestionAnalysisPage() {
         <div className={styles.header}>
           <h2 className={styles.title}>Quiz {quizData.title} Question Analysis</h2>
           <div className={styles.dateInfo}>
-            <p>Created on: {new Date(quizData.createdAt).toLocaleDateString()}</p>
+            <p>Created on: {new Date(quizData.createdAt).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}</p>
             <p>Impressions: {quizData.impressions}</p>
           </div>
         </div>
@@ -63,15 +67,15 @@ function QuizQuestionAnalysisPage() {
             <h3>Q{index + 1}: {question.text}</h3>
             <div className={styles.statsContainer}>
               <div>
-                <h4>{quizData.totalAttempts}</h4> {/* Display total attempts */}
+                <h4>{quizData.totalAttempts}</h4>
                 <p>people Attempted the question</p>
               </div>
               <div>
-                <h4>{quizData.correctResponses}</h4> {/* Display correct responses */}
+                <h4>{quizData.correctResponses}</h4>
                 <p>people Answered Correctly</p>
               </div>
               <div>
-                <h4>{quizData.incorrectResponses}</h4> {/* Display incorrect responses */}
+                <h4>{quizData.incorrectResponses}</h4>
                 <p>people Answered Incorrectly</p>
               </div>
             </div>

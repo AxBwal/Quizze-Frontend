@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styles from '../QuizQuestionAnalysisPage/QuizQuestionAnalysisPage.module.css'; // Use the same CSS module as the Quiz page
+import styles from '../QuizQuestionAnalysisPage/QuizQuestionAnalysisPage.module.css'; 
 
 function PollQuestionAnalysisPage() {
   const { pollId } = useParams();
@@ -53,7 +53,11 @@ function PollQuestionAnalysisPage() {
         <div className={styles.header}>
           <h2 className={styles.title}>Poll {pollData.title} Question Analysis</h2>
           <div className={styles.dateInfo}>
-            <p>Created on: {new Date(pollData.createdAt).toLocaleDateString()}</p>
+            <p>Created on: {new Date(pollData.createdAt).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}</p>
             <p>Impressions: {pollData.impressions}</p>
           </div>
         </div>
