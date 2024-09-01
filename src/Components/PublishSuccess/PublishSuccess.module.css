@@ -1,60 +1,78 @@
 .publishSuccessContainer {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 420px;
+  width: 100%;
   text-align: center;
-  position: fixed; /* Changed from relative to fixed */
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Adjust positioning */
-  z-index: 1000; /* Ensure it's on top of other content */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 }
-  
-  .header {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .closeButton {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
+
+.header {
+  display: flex;
+  justify-content: flex-end;
 }
-  
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #888;
+}
+
 h2 {
-  margin: 20px 0;
+  font-size: 22px;
+  font-weight: 600;
   color: #333;
+  margin-bottom: 30px !important; /* Force the margin to apply */
 }
-  
+
+
+
 .linkContainer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin: 20px 0;
+  gap: 30px; /* Ensures equal spacing between the URL input and the button */
 }
-  
+
 .quizLinkInput {
-  width: 70%;
-  padding: 8px;
-  border-radius: 4px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
   border: 1px solid #ccc;
-  background: #f1f1f1;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #f7f7f7;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 }
-  
+
 .shareButton {
   background-color: #4caf50;
   color: white;
+  padding: 12px 30px;
   border: none;
-  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-  
-  .shareButton:hover {
-    background-color: #45a049;
-  }
-  
+
+.shareButton:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.shareButton:active {
+  background-color: #39843c;
+  transform: translateY(0);
+}
